@@ -27,9 +27,6 @@ class Repository:
         :return: None if successful
         :raises Exception: from domain, handled by UI
         """
-        for s in self._objects:
-            if s.id == object.id:
-                raise NotUnique("ID should be unique!")
         self._objects.append(object)
 
     def remove_object(self, id):
@@ -40,8 +37,6 @@ class Repository:
         :return None: successful
         :raises Exception: from the domain
         """
-        if not id.isnumeric():
-            raise NotAnInt("ID should be of type int!")
         for object in self._objects:
             if object.id == id:
                 self._objects.remove(object)

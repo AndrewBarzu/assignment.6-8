@@ -8,16 +8,9 @@ import datetime
 
 class Student:
     def __init__(self, studentID, name, group):
-        name = str(name)
-        if studentID.isnumeric():
-            self._studentID = studentID
-        else:
-            raise NotAnInt("ID should be of type int!")
+        self._studentID = studentID
         self._name = name
-        if group.isnumeric():
-            self._group = group
-        else:
-            raise NotAnInt("Group should be of type int!")
+        self._group = group
 
     @property
     def id(self):
@@ -40,9 +33,6 @@ class Student:
 
     @name.setter
     def name(self, new_name):
-        for i in new_name:
-            if i.isnumeric():
-                raise NotAString("Name should be string!")
         self._name = new_name
 
     @group.setter
@@ -57,14 +47,7 @@ class Student:
 
 class Assignment:
     def __init__(self, assignmentID, description, year, month, day):
-        description = str(description)
-        if assignmentID.isnumeric():
-            self._assignmentID = assignmentID
-        else:
-            raise NotAnInt("ID should be of type int!")
-        for i in description:
-            if i in '1234567890':
-                raise NotAString("Description should be of type str!")
+        self._assignmentID = assignmentID
         self._description = description
         if day.isnumeric() and month.isnumeric() and year.isnumeric():
             self._deadline = datetime.datetime(int(year), int(month), int(day))
@@ -92,9 +75,6 @@ class Assignment:
 
     @description.setter
     def description(self, new_description):
-        for i in new_description:
-            if i.isnumeric():
-                raise NotAString("Description should be string!")
         self._description = new_description
 
     @deadline.setter

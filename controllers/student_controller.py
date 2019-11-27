@@ -4,12 +4,14 @@ from new_files.exceptions import *
 from new_files.better_repo import Repository
 from new_files.domain import Student
 from copy import deepcopy
+from new_files.validation_service import StudentValidator
 
 class StudentController:
     def __init__(self, studentRepo: Repository, undoController: UndoController, gradeController: GradeController):
         self._studentrepo = studentRepo
         self._undoController = undoController
         self._gradeController = gradeController
+        self._studentValidator = StudentValidator()
 
     def add_student(self, sid, name, group):
         """
@@ -24,6 +26,7 @@ class StudentController:
         :raises NotAString: name is not a string
         """
         student = Student(sid, name, group)
+        self._studentValidator.validate_student(student, self._studentrepo)
         self._studentrepo.add_object(student)
         redo = FunctionCall(self.add_student, sid, name, group)
         undo = FunctionCall(self.remove_student, sid)
@@ -39,6 +42,7 @@ class StudentController:
         :raises NotAnInt: the id is not an int
         :raises NotExistent: the student does not exist
         """
+        self._studentValidator.validate_ID(sid)
         operations = self._gradeController.remove_student_grade(sid)
         student = self._studentrepo[self._studentrepo.find_object(sid)]
         self._studentrepo.remove_object(student.id)
@@ -64,8 +68,7 @@ class StudentController:
         :raises NotUnique: new id is not unique
         :raises NoUpdate: student was not changed
         """
-        if not sid.isnumeric():
-            raise NotAnInt("ID should be an int!")
+        self._studentValidator.validate_ID(sid)
         old_student = self._studentrepo.find_object(sid)
         if old_student is None:
             raise NotExistent("Student does not exist")
