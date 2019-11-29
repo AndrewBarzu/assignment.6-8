@@ -99,7 +99,7 @@ class Grade:
             raise NotAnInt("Student ID should be an int!")
         if grade is None:
             self._grade = None
-        elif grade.isnumeric():
+        elif type(grade) == int or grade.isnumeric():
             grade = int(grade)
             if grade in range(11):
                 self._grade = int(grade)
@@ -119,6 +119,14 @@ class Grade:
     @property
     def grade(self):
         return self._grade
+
+    @assignmentID.setter
+    def assignmentID(self, newid):
+        self._assignmentid = newid
+
+    @studentID.setter
+    def studentID(self, newid):
+        self._studentid = newid
 
     @grade.setter
     def grade(self, new_grade):

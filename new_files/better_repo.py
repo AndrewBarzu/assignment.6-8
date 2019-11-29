@@ -83,12 +83,13 @@ class GradeRepository:
             if grade.studentID == studentID and grade.assignmentID == assignmentID:
                 self._grades.remove(grade)
                 return
-        raise NotExistent("ID's not found!")
+        raise NotExistent("Grade ID's not found!")
 
     def grade(self, sid, aid, new_grade):
         for grade in self._grades:
             if grade.studentID == sid and grade.assignmentID == aid:
                 grade.grade = new_grade
+                return
         raise NotExistent("Grade not found!")
 
     def get_student_grades(self, sid, graded):

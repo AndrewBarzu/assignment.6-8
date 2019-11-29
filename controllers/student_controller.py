@@ -43,13 +43,17 @@ class StudentController:
         :raises NotExistent: the student does not exist
         """
         self._studentValidator.validate_ID(sid)
-        operations = self._gradeController.remove_student_grade(sid)
-        student = self._studentrepo[self._studentrepo.find_object(sid)]
+        operations = []
+        idx = self._studentrepo.find_object(sid)
+        if idx is None:
+            raise NotExistent("Student does not exist!")
+        student = self._studentrepo[idx]
         self._studentrepo.remove_object(student.id)
         redo = FunctionCall(self.remove_student, student.id)
         undo = FunctionCall(self.add_student, student.id, student.name, student.group)
         operation = Operation(undo, redo)
         operations.append(operation)
+        operations.extend(self._gradeController.remove_student_grade(sid))
         cascade = CascadingOperation(operations)
         self._undoController.recordOp(cascade)
 
@@ -69,16 +73,16 @@ class StudentController:
         :raises NoUpdate: student was not changed
         """
         self._studentValidator.validate_ID(sid)
-        old_student = self._studentrepo.find_object(sid)
-        if old_student is None:
+        idx = self._studentrepo.find_object(sid)
+        if idx is None:
             raise NotExistent("Student does not exist")
-        if new_id.isnumeric() and new_id != '':
+        if (new_id.isnumeric() or new_id == '') and new_id != sid:
             for s in self._studentrepo:
                 if s.id == new_id:
                     raise NotUnique("ID should be unique!")
-        elif new_id != '':
+        else:
             raise NotAnInt("ID should be an int!")
-
+        old_student = self._studentrepo[idx]
         updated = 0
         student = []
         if new_id != '':
@@ -99,12 +103,15 @@ class StudentController:
         if updated == 0:
             raise NoUpdate("No changes made!")
         student = Student(student[0], student[1], student[2])
-
+        operations = []
         self._studentrepo.update_object(self._studentrepo.find_object(sid), student)
         redo = FunctionCall(self.update_student, sid, student.id, student.name, student.group)
         undo = FunctionCall(self.update_student, student.id, old_student.id, old_student.name, old_student.group)
         operation = Operation(undo, redo)
-        self._undoController.recordOp(operation)
+        operations.append(operation)
+        operations.append(self._gradeController.update_student_id(old_student.id, new_id))
+        cascade = CascadingOperation(operations)
+        self._undoController.recordOp(cascade)
 
     def get_students(self):
         return deepcopy(self._studentrepo.get_objects())

@@ -9,14 +9,6 @@ class TestDomain(unittest.TestCase):
         self.assertEqual(student.id, '1')
         self.assertEqual(student.name, 'Didid')
         self.assertEqual(student.group, '5')
-        with self.assertRaises(exceptions.NotAnInt):
-            domain.Student('a', 'Doodo', '5')
-        with self.assertRaises(exceptions.NotAnInt):
-            domain.Student('11', 'doopp', 'a')
-        with self.assertRaises(exceptions.NotAnInt):
-            student.id = 'a'
-        with self.assertRaises(exceptions.NotAnInt):
-            student.group = 'a'
         student.group = '2'
         self.assertEqual(student.group, '2')
 
@@ -31,8 +23,9 @@ class TestDomain(unittest.TestCase):
         assert assignment2 == assignment
         assignment.description = 'arsifilud'
         self.assertEqual(assignment.description, 'arsifilud')
-        with self.assertRaises(exceptions.NotAString):
-            assignment.description = 'aerse1'
+        #with self.assertRaises(exceptions.NotAString):
+        assignment.description = 'aerse1'
+        self.assertEqual(assignment.description, 'aerse1')
 
     def test_grade(self):
         grade = domain.Grade('1', '1', None)

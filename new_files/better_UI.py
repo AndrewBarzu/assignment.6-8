@@ -217,7 +217,7 @@ class UI:   # pragma: no cover
             print(assignment)
         assignmentID = input("Assignment ID > ")
         try:
-            students = self._controller.Statistics().statistic_grades(assignmentID)
+            students = self._controller.statistic_grades(assignmentID)
             for student in students:
                 print(str(student))
         except NotExistent as e:
@@ -230,7 +230,7 @@ class UI:   # pragma: no cover
             print(assignment)
         assignmentID = input("Assignment ID > ")
         try:
-            students = self._controller.Statistics().statistic_assignments(assignmentID)
+            students = self._controller.statistic_assignments(assignmentID)
             for student in students:
                 print(student)
         except NotExistent as e:
@@ -238,7 +238,7 @@ class UI:   # pragma: no cover
 
     def situation_statistics(self):
         try:
-            situations = self._controller.Statistics().statistic_situation()
+            situations = self._controller.statistic_situations()
             for situation in situations:
                 print(str(situation))
         except NotExistent as e:

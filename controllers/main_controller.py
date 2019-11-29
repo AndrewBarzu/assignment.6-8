@@ -51,17 +51,16 @@ class MainController:
         self._gradeController.assign_group(assignmentID, group)
 
     def show_grades(self):
-        self._gradeController.show_grades()
+        return self._gradeController.show_grades()
 
-    def Statistics(self):
-        def statistic_grades(assignmentID):
-            return self._gradeController.statistic_grades(assignmentID)
+    def statistic_grades(self, assignmentID):
+        return self._gradeController.statistic_grades(assignmentID)
 
-        def statistic_assignments(assignmentID):
-            return self._gradeController.statistic_assignments(assignmentID)
+    def statistic_assignments(self, assignmentID):
+        return self._gradeController.statistic_assignments(assignmentID)
 
-        def statistic_situations():
-            return self._gradeController.statistic_situation()
+    def statistic_situations(self):
+        return self._gradeController.statistic_situation()
 
     def undo(self):
         self._undoController.undo()
