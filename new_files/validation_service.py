@@ -58,3 +58,9 @@ class AssignmentValidator:
         if not ID.isnumeric():
             raise NotAnInt("Student ID should be of type int!")
 
+class GradeValidator:
+    @staticmethod
+    def validateGrade(grade: Grade):
+        if grade.grade < 0 or grade.grade > 10 or grade.grade is not None:
+            raise ValueError("Grade should be between 0 and 10!")
+
