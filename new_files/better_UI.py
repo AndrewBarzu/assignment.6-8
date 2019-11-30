@@ -273,10 +273,10 @@ class UI:   # pragma: no cover
             cmd = input(' > ')
             os.system('cls')
             if cmd in commands.keys():
-                try:
-                    commands[cmd]()
-                except Exception as e:
-                    print(e)
+                #try:
+                commands[cmd]()
+                #except Exception as e:
+                #    print(e)
             elif cmd == 'init grades':
                 self._controller.init_grades()
             else:

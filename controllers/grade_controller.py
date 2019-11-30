@@ -237,4 +237,6 @@ class GradeController:
         return self.sort_grades(situations)
 
     def show_grades(self):
+        if len(self._graderepo) == 0:
+            raise NotExistent("No grades!")
         return [str(grade) for grade in self._graderepo]

@@ -51,7 +51,7 @@ class MainController:
         self._gradeController.assign_group(assignmentID, group)
 
     def show_grades(self):
-        self._gradeController.show_grades()
+        return self._gradeController.show_grades()
 
     def Statistics(self):
         def statistic_grades(assignmentID):
