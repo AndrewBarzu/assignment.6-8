@@ -1,3 +1,5 @@
+
+
 class UndoController:
     def __init__(self):
         self._undo_stack = []
@@ -8,18 +10,24 @@ class UndoController:
         if self._flag is True:
             return
         self._undo_stack.append(operation)
+        self._redo_stack.clear()
 
     def undo(self):
+        if len(self._undo_stack) == 0:
+            raise ValueError("No more undo's!")
         self._flag = True
-
-        object = self._undo_stack.pop()
-        print(object)
-        object.undo()
+        undoable = self._undo_stack.pop()
+        undoable.undo()
+        self._redo_stack.append(undoable)
         self._flag = False
 
     def redo(self):
+        if len(self._redo_stack) == 0:
+            raise ValueError("No more redo's!")
         self._flag = True
-        self._redo_stack.pop().redo()
+        redoable = self._redo_stack.pop()
+        redoable.redo()
+        self._undo_stack.append(redoable)
         self._flag = False
 
 class FunctionCall:
@@ -50,5 +58,4 @@ class CascadingOperation:
             op.undo()
 
     def redo(self):
-        for op in self._operations:
-            op.redo()
+        self._operations[0].redo()

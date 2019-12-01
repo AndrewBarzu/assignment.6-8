@@ -24,14 +24,18 @@ class AssignmentController:
 
     def remove_assignment(self, aid):
         self._assignmentValidator.validate_ID(aid)
-        operations = self._gradeController.remove_assignment_grade(aid)
+        operations = []
+        idx = self._assignmentRepo.find_object(aid)
+        if idx is None:
+            raise NotExistent("Assignment does not exist!")
+        assignment = self._assignmentRepo[idx]
         self._assignmentRepo.remove_object(aid)
-        assignment = self._assignmentRepo[self._assignmentRepo.find_object(aid)]
         redo = FunctionCall(self.remove_assignment, aid)
         undo = FunctionCall(self.add_assignment, assignment.id, assignment.description, str(assignment.deadline.day),
                             str(assignment.deadline.month), str(assignment.deadline.year))
         operation = Operation(undo, redo)
         operations.append(operation)
+        operations.extend(self._gradeController.remove_assignment_grade(aid))
         cascade = CascadingOperation(operations)
         self._undoController.recordOp(cascade)
 
@@ -42,11 +46,11 @@ class AssignmentController:
         if idx is None:
             raise NotExistent("Assignment does not exist!")
 
-        if new_aid.isnumeric() and new_aid != '':
+        if (new_aid.isnumeric() or new_aid == '') and new_aid != aid:
             for assig in self._assignmentRepo:
                 if assig.id == new_aid:
                     raise NotUnique("ID should be unique!")
-        elif new_aid != '':
+        else:
             raise NotAnInt("ID should be an int!")
         updated = 0
         assignment = []
@@ -80,10 +84,10 @@ class AssignmentController:
             raise NoUpdate("No changes made!")
         assignment = Assignment(assignment[0], assignment[1], assignment[2], assignment[3], assignment[4])
         self._assignmentRepo.update_object(idx, assignment)
-        redo = FunctionCall(self.update_assignment(aid, assignment.id, assignment.description, assignment.deadline.day,
-                                                   assignment.deadline.month, assignment.deadline.year))
-        undo = FunctionCall(self.update_assignment(assignment.id, old_assignment.id, old_assignment.description,
-                                                   old_assignment.deadline.day, old_assignment.deadline.month, old_assignment.deadline.year))
+        redo = FunctionCall(self.update_assignment, aid, assignment.id, assignment.description, assignment.deadline.day,
+                                                   assignment.deadline.month, assignment.deadline.year)
+        undo = FunctionCall(self.update_assignment, assignment.id, old_assignment.id, old_assignment.description,
+                                                   old_assignment.deadline.day, old_assignment.deadline.month, old_assignment.deadline.year)
         operation = Operation(undo, redo)
         self._undoController.recordOp(operation)
 

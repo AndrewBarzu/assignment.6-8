@@ -2,6 +2,7 @@ from new_files.better_repo import Repository, GradeRepository
 from controllers.undo_controller import *
 from new_files.exceptions import *
 from new_files.domain import Grade
+from copy import deepcopy
 import datetime
 import operator
 
@@ -53,30 +54,49 @@ class GradeController:
         operation = Operation(undo, redo)
         self._undoController.recordOp(operation)
 
-    def remove_grade(self, assignmentID, studentID):
+    def remove_grade(self, studentID, assignmentID):
         self._graderepo.delete(studentID, assignmentID)
 
     def remove_student_grade(self, studentID):
         operations = []
-        for grade in self._graderepo:
-            if grade.studentID == studentID:
-                self._graderepo.delete(grade.studentID, grade.assignmentID)
-                redo = FunctionCall(self.remove_grade(grade.assignmentID, grade.studentID))
-                undo = FunctionCall(self.assign(grade.assignmentID, grade.studentID, grade.grade))
-                operation = Operation(undo, redo)
-                operations.append(operation)
+        grades = deepcopy(self._graderepo.get_student_grades(studentID, None))
+        for grade in grades:
+            self._graderepo.delete(grade.studentID, grade.assignmentID)
+            redo = FunctionCall(self.remove_grade, grade.studentID, grade.assignmentID)
+            undo = FunctionCall(self.assign, grade.assignmentID, grade.studentID, grade.grade)
+            operation = Operation(undo, redo)
+            operations.append(operation)
         return operations
 
     def remove_assignment_grade(self, assignmentID):
         operations = []
-        for grade in self._graderepo:
+        grades = deepcopy(self._graderepo)
+        for grade in grades:
             if grade.assignmentID == assignmentID:
                 self._graderepo.delete(grade.studentID, grade.assignmentID)
-                redo = FunctionCall(self.remove_grade(grade.assignmentID, grade.studentID))
-                undo = FunctionCall(self.assign(grade.assignmentID, grade.studentID, grade.grade))
+                redo = FunctionCall(self.remove_grade, grade.assignmentID, grade.studentID)
+                undo = FunctionCall(self.assign, grade.assignmentID, grade.studentID, grade.grade)
                 operation = Operation(undo, redo)
                 operations.append(operation)
         return operations
+
+    def update_student_id(self, old_sid, new_sid):
+        for grade in self._graderepo:
+            if grade.studentID == old_sid:
+                grade.studentID = new_sid
+        redo = FunctionCall(self.update_student_id, old_sid, new_sid)
+        undo = FunctionCall(self.update_student_id, new_sid, old_sid)
+        operation = Operation(undo, redo)
+        return operation
+
+    def update_assignment_id(self, old_aid, new_aid):
+        for grade in self._graderepo:
+            if grade.studentID == old_aid:
+                grade.studentID = new_aid
+        redo = FunctionCall(self.update_student_id, old_aid, new_aid)
+        undo = FunctionCall(self.update_student_id, new_aid, old_aid)
+        operation = Operation(undo, redo)
+        return operation
 
     def assign_group(self, assignmentID, group):
         """
@@ -166,9 +186,10 @@ class GradeController:
             raise NotExistent("No grades found!")
         grades = self.sort_grades(grades)
         students = []
-        assignment = self._assignmentrepo.find_object(assignmentID)
-        if assignment is None:
+        idx = self._assignmentrepo.find_object(assignmentID)
+        if idx is None:
             raise NotExistent("Assignment does not exist!")
+        assignment = self._assignmentrepo[idx]
         for grade in grades:
             if grade.assignmentID == assignment.id and grade.grade is not None:
                 class TransferObj:
@@ -179,26 +200,26 @@ class GradeController:
                     def __str__(self):
                         return 'Student: ' + self.student + ', Grade: ' + str(self.grade)
 
-                transfer = TransferObj(str(self._studentrepo.find_object(grade.studentID)), grade.grade)
+                transfer = TransferObj(str(self._studentrepo[self._studentrepo.find_object(grade.studentID)]), grade.grade)
                 students.append(transfer)
         if len(students) == 0:
             raise NotExistent("No students are graded for this assignment!")
         return students
 
     def statistic_assignments(self, assignmentID):
-        assignment = self._assignmentrepo.find_object(assignmentID)
+        idx = self._assignmentrepo.find_object(assignmentID)
         students = []
         today = datetime.datetime.now().date()
-        if assignment is None:
+        if idx is None:
             raise NotExistent("Assignment does not exist!")
+        assignment = self._assignmentrepo[idx]
         for grade in self._graderepo:
             if grade.grade is None and assignment.id == grade.assignmentID and assignment.deadline < today:
-                students.append(str(self._studentrepo.find_object(grade.studentID)))
+                students.append(str(self._studentrepo[self._studentrepo.find_object(grade.studentID)]))
         if len(students) == 0:
             raise NotExistent("No late students were found!")
         return students
 
-    @property
     def statistic_situation(self):
         """
         Gives the situation of all student, sorted by average grade for all assignments
@@ -210,8 +231,9 @@ class GradeController:
         situations = []
         count = []
         for grade in self._graderepo:
-            student = self._studentrepo.find_object(grade.studentID)
-            if student is not None and grade.grade is not None:
+            idx = self._studentrepo.find_object(grade.studentID)
+            if idx is not None and grade.grade is not None:
+                student = self._studentrepo[idx]
                 not_added = True
                 for i in range(len(situations)):
                     if situations[i].student == student:
