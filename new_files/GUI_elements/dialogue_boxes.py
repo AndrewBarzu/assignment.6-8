@@ -74,7 +74,7 @@ class RemoveDialogBox(QWidget):
 
         self.setLayout(layout)
         self.setWindowTitle("Remove " + caller)
-        self.resize(400, 150)
+        self.resize(400, 60)
 
 class ErrorDialogBox(QWidget):
     def __init__(self, error: str, parent=None):

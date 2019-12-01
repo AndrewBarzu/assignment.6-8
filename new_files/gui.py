@@ -70,7 +70,7 @@ class Ui_MainWindow(object):
 
 
     def on_remove_assignment_click(self):
-        self.dialog = RemoveDialogBox("remove")
+        self.dialog = RemoveDialogBox("assignment")
         self.dialog.show()
 
 
@@ -92,6 +92,7 @@ class Ui_MainWindow(object):
         removeAssignmentButton = QPushButton(self.centralwidget)
         removeAssignmentButton.setObjectName("removeAssignmentButton")
         removeAssignmentButton.setText(_translate("MainWindow", "Remove Assignment"))
+        removeAssignmentButton.clicked.connect(self.on_remove_assignment_click)
         layout.addWidget(removeAssignmentButton)
 
         # Update assignment
@@ -116,6 +117,10 @@ class Ui_MainWindow(object):
         self.dialog = AddStudentDialogBox()
         self.dialog.show()
 
+    def on_remove_student_click(self):
+        self.dialog = RemoveDialogBox("student")
+        self.dialog.show()
+
     def init_student_menu(self, layout):
         _translate = QCoreApplication.translate
 
@@ -134,6 +139,7 @@ class Ui_MainWindow(object):
         removeStudentButton = QPushButton(self.centralwidget)
         removeStudentButton.setObjectName("removeStudentButton")
         removeStudentButton.setText(_translate("MainWindow", "Remove Student"))
+        removeStudentButton.clicked.connect(self.on_remove_student_click)
         layout.addWidget(removeStudentButton)
 
         # Update assignment
