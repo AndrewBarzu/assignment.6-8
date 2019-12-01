@@ -1,15 +1,20 @@
 from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from controllers.assignment_controller import AssignmentController
+from controllers.grade_controller import GradeController
+from controllers.main_controller import MainController
+from controllers.student_controller import StudentController
+from controllers.undo_controller import UndoController
 from new_files.GUI_elements.dialogue_boxes import *
 import sys
 
+from new_files.better_repo import Repository, GradeRepository
+
 
 class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+    def setupUi(self, MainWindow, controller):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(851, 657)
-
+        self.controller = controller
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
@@ -35,8 +40,9 @@ class Ui_MainWindow(object):
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
 
-        self.listView = QListView(self.centralwidget)
+        self.listView = QListWidget(self.centralwidget)
         self.listView.setObjectName("listView")
+        self.show_grades()
 
         self.gridLayout.addWidget(self.studentMenuLayout, 0, 1)
         self.studentMenuLayout.hide()
@@ -62,16 +68,30 @@ class Ui_MainWindow(object):
         self.assignmentMenuLayout.hide()
         self.studentMenuLayout.hide()
         self.mainLayout.show()
+        self.show_grades()
 
 
     def on_add_assignment_click(self):
-        self.dialog = AddAssignmentDialogBox()
+        self.dialog = AddAssignmentDialogBox(self.controller, self.show_assignments)
         self.dialog.show()
 
 
     def on_remove_assignment_click(self):
-        self.dialog = RemoveDialogBox("assignment")
+        self.dialog = RemoveDialogBox("assignment", self.controller, self.show_assignments)
         self.dialog.show()
+
+
+    def on_update_assignment_click(self):
+        self.dialog = UpdateAssignmentDialogBox(self.controller, self.show_assignments)
+        self.dialog.show()
+
+    def show_assignments(self):
+        self.listView.clear()
+        assignments = self.controller.show_assignments()
+        for assignment in assignments:
+            listWidget = QListWidgetItem()
+            self.listView.addItem(listWidget)
+            self.listView.setItemWidget(listWidget, QLabel(assignment))
 
 
     def init_assignment_menu(self, layout):
@@ -99,6 +119,7 @@ class Ui_MainWindow(object):
         updateAssignmentButton = QPushButton(self.centralwidget)
         updateAssignmentButton.setObjectName("updateAssignmentButton")
         updateAssignmentButton.setText(_translate("MainWindow", "Update Assignment"))
+        updateAssignmentButton.clicked.connect(self.on_update_assignment_click)
         layout.addWidget(updateAssignmentButton)
 
         # Back
@@ -114,11 +135,31 @@ class Ui_MainWindow(object):
 
 
     def on_add_student_click(self):
-        self.dialog = AddStudentDialogBox()
+        self.dialog = AddStudentDialogBox(self.controller, self.show_students)
         self.dialog.show()
 
+
     def on_remove_student_click(self):
-        self.dialog = RemoveDialogBox("student")
+        self.dialog = RemoveDialogBox("student", self.controller, self.show_students)
+        self.dialog.show()
+
+
+    def on_update_student_click(self):
+        self.dialog = UpdateStudentDialogBox(self.controller, self.show_students)
+        self.dialog.show()
+
+
+    def show_students(self):
+        self.listView.clear()
+        students = self.controller.show_students()
+        for student in students:
+            listWidget = QListWidgetItem()
+            self.listView.addItem(listWidget)
+            self.listView.setItemWidget(listWidget, QLabel(student))
+
+
+    def assign_student_click(self):
+        self.dialog = AssignStudentDialogBox(self.controller, self.show_grades)
         self.dialog.show()
 
     def init_student_menu(self, layout):
@@ -146,6 +187,7 @@ class Ui_MainWindow(object):
         updateStudentButton = QPushButton(self.centralwidget)
         updateStudentButton.setObjectName("updateStudentButton")
         updateStudentButton.setText(_translate("MainWindow", "Update Student"))
+        updateStudentButton.clicked.connect(self.on_update_student_click)
         layout.addWidget(updateStudentButton)
 
         # Back
@@ -163,10 +205,23 @@ class Ui_MainWindow(object):
     def on_student_menu_click(self):
         self.mainLayout.hide()
         self.studentMenuLayout.show()
+        self.show_students()
+
 
     def on_assignment_menu_click(self):
         self.mainLayout.hide()
         self.assignmentMenuLayout.show()
+        self.show_assignments()
+
+
+    def show_grades(self):
+        self.listView.clear()
+        grades = self.controller.show_grades()
+        for grade in grades:
+            item = QListWidgetItem()
+            self.listView.addItem(item)
+            self.listView.setItemWidget(item, QLabel(grade))
+
 
     def init_main_menu(self, layout):
         _translate = QCoreApplication.translate
@@ -216,15 +271,25 @@ class Ui_MainWindow(object):
         layout.addItem(spacerItem1)
         return layout
 
-
-    def retranslateUi(self, MainWindow):
+    @staticmethod
+    def retranslateUi(MainWindow):
         _translate = QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
+studentRepo = Repository()
+studentRepo.initialize_students()
+assignmentRepo = Repository()
+assignmentRepo.initialize_assignments()
+gradeRepo = GradeRepository()
+undoController = UndoController()
+gradeController = GradeController(assignmentRepo, studentRepo, gradeRepo, undoController)
+studentController = StudentController(studentRepo, undoController, gradeController)
+assignmentController = AssignmentController(assignmentRepo, gradeController, undoController)
+main_controller = MainController(gradeController, studentController, undoController, assignmentController)
 
 gui = Ui_MainWindow()
 app = QApplication(sys.argv)
 main_window = QMainWindow()
-gui.setupUi(main_window)
+gui.setupUi(main_window, main_controller)
 main_window.show()
 sys.exit(app.exec_())

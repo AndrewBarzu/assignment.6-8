@@ -51,12 +51,12 @@ class AssignmentValidator:
         self.validate_ID(assignment.id)
         for assig in assignment_repo:
             if assignment.id == assig.id:
-                raise NotUnique("Student ID should be unique!")
+                raise NotUnique("Assignment ID should be unique!")
 
     @staticmethod
     def validate_ID(ID: str):
         if not ID.isnumeric():
-            raise NotAnInt("Student ID should be of type int!")
+            raise NotAnInt("Assignment ID should be of type int!")
 
 class GradeValidator:
     @staticmethod

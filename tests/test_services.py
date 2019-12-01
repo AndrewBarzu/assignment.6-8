@@ -136,8 +136,7 @@ class TestServices(unittest.TestCase):
         assignments = main_controller.get_assignments()
         assignmentss = main_controller.show_assignments()
         self.assertEqual(str(assignments[1]), assignmentss[1])
-        with self.assertRaises(NotExistent):
-            grades = main_controller.show_grades()
+        grades = main_controller.show_grades()
 
     def test_statistics(self):
         main_controller = self.initController()
