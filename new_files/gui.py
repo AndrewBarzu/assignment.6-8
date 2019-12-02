@@ -1,7 +1,6 @@
 from PyQt5.QtCore import *
 from controllers.assignment_controller import AssignmentController
 from controllers.grade_controller import GradeController
-from controllers.main_controller import MainController
 from controllers.student_controller import StudentController
 from controllers.undo_controller import UndoController
 from new_files.GUI_elements.dialogue_boxes import *
@@ -17,6 +16,7 @@ class Ui_MainWindow(object):
         self.controller = controller
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+        self.controller.init_grades()
 
         mainLayout = QVBoxLayout()
         mainLayout.setObjectName("mainLayout")
@@ -223,6 +223,47 @@ class Ui_MainWindow(object):
             self.listView.setItemWidget(item, QLabel(grade))
 
 
+    def on_assign_student_click(self):
+        try:
+            self.assignStudentDialog = AssignStudentDialogBox(self.controller, self.show_grades)
+            self.assignStudentDialog.show()
+        except Exception as e:
+            print(e)
+
+
+    def on_grade_click(self):
+        try:
+            self.gradeStudentDialog = StudentSelectorDialogBox(self.controller, self.show_grades)
+            self.gradeStudentDialog.show()
+        except Exception as e:
+            print(e)
+
+
+    def on_assign_group_click(self):
+        try:
+            self.assignGroupDialog = AssignGroupDialogBox(self.controller, self.show_grades)
+            self.assignGroupDialog.show()
+        except Exception as e:
+            print(e)
+
+
+    def on_undo_click(self):
+        try:
+            self.controller.undo()
+            self.show_grades()
+        except Exception as e:
+            self.errorDialog = ErrorDialogBox(e)
+            self.errorDialog.show()
+
+
+    def on_redo_click(self):
+        try:
+            self.controller.redo()
+            self.show_grades()
+        except Exception as e:
+            self.errorDialog = ErrorDialogBox(e)
+            self.errorDialog.show()
+
     def init_main_menu(self, layout):
         _translate = QCoreApplication.translate
 
@@ -245,26 +286,31 @@ class Ui_MainWindow(object):
         gradeStudentButton = QPushButton(self.centralwidget)
         gradeStudentButton.setObjectName("gradeStudentButton")
         gradeStudentButton.setText(_translate("MainWindow", "Grade Student"))
+        gradeStudentButton.clicked.connect(self.on_grade_click)
         layout.addWidget(gradeStudentButton)
 
         assignStudentButton = QPushButton(self.centralwidget)
         assignStudentButton.setObjectName("assignStudentButton")
         assignStudentButton.setText(_translate("MainWindow", "Assign Student"))
+        assignStudentButton.clicked.connect(self.on_assign_student_click)
         layout.addWidget(assignStudentButton)
 
         assignGroupButton = QPushButton(self.centralwidget)
         assignGroupButton.setObjectName("assignGroupButton")
         assignGroupButton.setText(_translate("MainWindow", "Assign Group"))
+        assignGroupButton.clicked.connect(self.on_assign_group_click)
         layout.addWidget(assignGroupButton)
 
         undoButton = QPushButton(self.centralwidget)
         undoButton.setObjectName("undoButton")
         undoButton.setText(_translate("MainWindow", "Undo"))
+        undoButton.clicked.connect(self.on_undo_click)
         layout.addWidget(undoButton)
 
         redoButton = QPushButton(self.centralwidget)
         redoButton.setObjectName("redoButton")
         redoButton.setText(_translate("MainWindow", "Redo"))
+        redoButton.clicked.connect(self.on_redo_click)
         layout.addWidget(redoButton)
 
         spacerItem1 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)

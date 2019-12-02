@@ -43,7 +43,7 @@ class Student:
             raise NotAnInt("Group should be int!")
 
     def __str__(self):
-        return 'ID: ' + str(self.id) + ', Name: ' + self.name + ', Group: ' + str(self.group)
+        return 'ID: ' + str(self.id) + ' | Name: ' + self.name + ' | Group: ' + str(self.group)
 
 class Assignment:
     def __init__(self, assignmentID, description, year, month, day):
@@ -85,7 +85,7 @@ class Assignment:
         return self.id == other.id and self.description == other.description and self.deadline == other.deadline
 
     def __str__(self):
-        return 'ID: ' + self.id + ', Description: ' + self.description + ', Deadline: ' + str(self.deadline)
+        return 'ID: ' + self.id + ' | Description: ' + self.description + ' | Deadline: ' + str(self.deadline)
 
 class Grade:
     def __init__(self, assignmentID, studentID, grade):
@@ -147,4 +147,5 @@ class Grade:
         return self.assignmentID == other.assignmentID and self.studentID == other.studentID
 
     def __str__(self):
-        return "Student: " + str(self.studentID) + ", Assignment: " + str(self.assignmentID) + ", Grade: " + str(self.grade)
+        return "Student: " + str(self.studentID) + " | Assignment: " + str(self.assignmentID) + " | Grade: " + str(self.grade)
+

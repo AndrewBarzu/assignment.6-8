@@ -50,7 +50,7 @@ class GradeController:
         grade = Grade(assignmentID, studentID, grade)
         self._graderepo.add(grade)
         redo = FunctionCall(self.assign, assignmentID, studentID)
-        undo = FunctionCall(self.remove_grade, assignmentID, studentID)
+        undo = FunctionCall(self.remove_grade, studentID, assignmentID)
         operation = Operation(undo, redo)
         self._undoController.recordOp(operation)
 
@@ -131,8 +131,8 @@ class GradeController:
                     studentID = student.id
                     grade = Grade(assignmentID, studentID, None)
                     self._graderepo.add(grade)
-                    redo = FunctionCall(self.assign, assignmentID, studentID)
-                    undo = FunctionCall(self.remove_grade, assignmentID, studentID)
+                    redo = FunctionCall(self.assign_group, assignmentID, group)
+                    undo = FunctionCall(self.remove_grade, studentID, assignmentID)
                     operation = Operation(undo, redo)
                     cascading.append(operation)
                     appended = True
