@@ -36,9 +36,9 @@ class TestServices(unittest.TestCase):
     def test_assign_group(self):
         main_controller = self.initController()
         main_controller.assign_group('1', '3')
-        self.assertEqual(main_controller.show_grades(), ["Student: 1, Assignment: 1, Grade: None",
-                                                         "Student: 9, Assignment: 1, Grade: None",
-                                                         "Student: 10, Assignment: 1, Grade: None"])
+        self.assertEqual(main_controller.show_grades(), ["Student: 1 | Assignment: 1 | Grade: None",
+                                                         "Student: 9 | Assignment: 1 | Grade: None",
+                                                         "Student: 10 | Assignment: 1 | Grade: None"])
         with self.assertRaises(exceptions.NotExistent):
             main_controller.assign_group('20', '3')
         with self.assertRaises(exceptions.NotAnInt):
@@ -52,7 +52,7 @@ class TestServices(unittest.TestCase):
         main_controller = self.initController()
         main_controller.assign('1', '1')
         main_controller.grade('1', '1', '10')
-        self.assertEqual(main_controller.show_grades(), ["Student: 1, Assignment: 1, Grade: 10"])
+        self.assertEqual(main_controller.show_grades(), ["Student: 1 | Assignment: 1 | Grade: 10"])
         with self.assertRaises(exceptions.NotExistent):
             main_controller.grade('1', 'a', '10')
         with self.assertRaises(exceptions.NotExistent):
@@ -74,10 +74,13 @@ class TestServices(unittest.TestCase):
         main_controller = self.initController()
         main_controller.init_grades()
         main_controller.remove_student('1')
+        with self.assertRaises(exceptions.NotExistent):
+            main_controller.remove_student('50')
 
 
     def test_update_student(self):
         main_controller = self.initController()
+        main_controller.init_grades()
         self.assertIsNone(main_controller.update_student('1', '20', 'Paricelu', '2'))
         with self.assertRaises(exceptions.NotAnInt):
             main_controller.update_student('ab', 'cd', 'aliasul', '11')
@@ -116,7 +119,8 @@ class TestServices(unittest.TestCase):
 
     def test_update_assignment(self):
         main_controller = self.initController()
-        self.assertIsNone(main_controller.update_assignment('1', '20', 'Paricelu', '2', '10', '2019'))
+        main_controller.init_grades()
+        main_controller.update_assignment('1', '20', 'Paricelu', '2', '10', '2019')
         with self.assertRaises(exceptions.NotAnInt):
             main_controller.update_assignment('ab', 'cd', 'aliasul', '11', '11', '1111')
         with self.assertRaises(exceptions.NotAnInt):
@@ -151,3 +155,9 @@ class TestServices(unittest.TestCase):
         main_controller.remove_student('1')
         main_controller.undo()
         main_controller.redo()
+
+    def test_others(self):
+        main_controller = self.initController()
+        graded_grades = main_controller.get_student_assignments('1', 1)
+        ungraded_grades = main_controller.get_student_assignments('1', 0)
+        all_grades = main_controller.get_student_assignments('1', None)

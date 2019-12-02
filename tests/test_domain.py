@@ -11,6 +11,9 @@ class TestDomain(unittest.TestCase):
         self.assertEqual(student.group, '5')
         student.group = '2'
         self.assertEqual(student.group, '2')
+        student.id = '10'
+        with self.assertRaises(exceptions.NotAnInt):
+            student.id = 'a'
 
     def test_assignment(self):
         assignment = domain.Assignment('1', 'assignment', '2020', '10', '19')
@@ -29,9 +32,9 @@ class TestDomain(unittest.TestCase):
 
     def test_grade(self):
         grade = domain.Grade('1', '1', None)
-        self.assertEqual(str(grade), 'Student: 1, Assignment: 1, Grade: None')
+        self.assertEqual(str(grade), 'Student: 1 | Assignment: 1 | Grade: None')
         grade = domain.Grade('1', '2', '8')
-        self.assertEqual(str(grade), 'Student: 2, Assignment: 1, Grade: 8')
+        self.assertEqual(str(grade), 'Student: 2 | Assignment: 1 | Grade: 8')
         with self.assertRaises(ValueError):
             grade = domain.Grade('1', '2', '11')
         with self.assertRaises(exceptions.NotAnInt):
@@ -42,7 +45,7 @@ class TestDomain(unittest.TestCase):
             grade = domain.Grade('1', '1', 'c')
         grade = domain.Grade('1', '1', None)
         grade.grade = '10'
-        self.assertEqual(str(grade), 'Student: 1, Assignment: 1, Grade: 10')
+        self.assertEqual(str(grade), 'Student: 1 | Assignment: 1 | Grade: 10')
         with self.assertRaises(exceptions.SetError):
             grade.grade = '6'
         grade.grade = None

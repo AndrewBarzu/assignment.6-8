@@ -83,13 +83,16 @@ class AssignmentController:
         if updated == 0:
             raise NoUpdate("No changes made!")
         assignment = Assignment(assignment[0], assignment[1], assignment[2], assignment[3], assignment[4])
+        operations = []
         self._assignmentRepo.update_object(idx, assignment)
-        redo = FunctionCall(self.update_assignment, aid, assignment.id, assignment.description, assignment.deadline.day,
-                                                   assignment.deadline.month, assignment.deadline.year)
+        redo = FunctionCall(self.update_assignment, aid, assignment.id, assignment.description, str(assignment.deadline.day),
+                                                   str(assignment.deadline.month), str(assignment.deadline.year))
         undo = FunctionCall(self.update_assignment, assignment.id, old_assignment.id, old_assignment.description,
-                                                   old_assignment.deadline.day, old_assignment.deadline.month, old_assignment.deadline.year)
-        operation = Operation(undo, redo)
-        self._undoController.recordOp(operation)
+                                                   str(old_assignment.deadline.day), str(old_assignment.deadline.month), str(old_assignment.deadline.year))
+        operations.append(Operation(undo, redo))
+        operations.append(self._gradeController.update_assignment_id(old_assignment.id, new_aid))
+        cascade = CascadingOperation(operations)
+        self._undoController.recordOp(cascade)
 
     def get_assignments(self):
         return deepcopy(self._assignmentRepo.get_objects())

@@ -358,34 +358,67 @@ class AssignGroupDialogBox(QWidget):
 
 
 class GradeDialogBox(QWidget):
-    def __init__(self, controller: MainController, show_grades, assignments, student, parent=None):
+    def __init__(self, controller: MainController, show_grades, parent=None):
         super(GradeDialogBox, self).__init__(parent)
+
+        students = controller.show_students()
         self.controller = controller
         self.show_grades = show_grades
-        self.student = student
-
-        layout = QVBoxLayout()
-
-        self.assignments = QListWidget()
-        for assignment in assignments:
+        self.myLayout = QVBoxLayout()
+        self.students = QListWidget()
+        for student in students:
             item = QListWidgetItem()
-            item.setText(str(assignment))
-            self.assignments.addItem(item)
-        layout.addWidget(self.assignments)
+            item.setText(student)
+            self.students.addItem(item)
+        self.myLayout.addWidget(self.students)
 
-        box = QHBoxLayout()
-        box.addWidget(QLabel("Grade: "))
-        self.grade = QLineEdit()
-        box.addWidget(self.grade)
+        self.select = QPushButton("Select")
+        self.select.clicked.connect(self.on_select_clicked)
+        self.myLayout.addWidget(self.select)
 
-        layout.addItem(box)
+        self.setLayout(self.myLayout)
+        self.setWindowTitle("Grade student")
+        self.resize(500, 300)
 
-        self.gradeButton = QPushButton("Grade")
-        self.gradeButton.clicked.connect(self.on_grade_click)
-        layout.addWidget(self.gradeButton)
+    def on_select_clicked(self):
+        student = self.students.currentItem()
+        if student is None:
+            raise NotExistent("No student selected!")
+        student = student.text()
+        student = re.match(r"ID: \d+", student)
+        self.student = re.findall(r"\d+", student.group())[0]
+        try:
+            assignments = self.controller.get_student_assignments(self.student, 0)
+            if len(assignments) == 0:
+                self.errorDialog = ErrorDialogBox(NotExistent("No assignments for this student!"))
+                self.errorDialog.show()
+            else:
+                QWidget().setLayout(self.layout())
+                self.myLayout = QVBoxLayout()
 
-        self.setLayout(layout)
-        self.setWindowTitle("Grade")
+                self.assignments = QListWidget()
+                for assignment in assignments:
+                    item = QListWidgetItem()
+                    item.setText(str(assignment))
+                    self.assignments.addItem(item)
+                self.myLayout.addWidget(self.assignments)
+
+                box = QHBoxLayout()
+                box.addWidget(QLabel("Grade: "))
+
+                self.grade = QLineEdit()
+                box.addWidget(self.grade)
+
+                self.myLayout.addItem(box)
+
+                gradeButton = QPushButton("Grade")
+                gradeButton.clicked.connect(self.on_grade_click)
+                self.myLayout.addWidget(gradeButton)
+
+                self.setLayout(self.myLayout)
+        except Exception as e:
+            self.errorDialog = ErrorDialogBox(e)
+            self.errorDialog.show()
 
     def on_grade_click(self):
         try:
@@ -402,44 +435,136 @@ class GradeDialogBox(QWidget):
             self.errorDialog.show()
 
 
-class StudentSelectorDialogBox(QWidget):
-    def __init__(self, controller: MainController, show_grades, parent=None):
-        super(StudentSelectorDialogBox, self).__init__(parent)
+class GradeStatisticsDialog(QWidget):
+    def __init__(self, controller: MainController, parent=None):
+        super(GradeStatisticsDialog, self).__init__(parent)
 
-        students = controller.show_students()
-        self.controller = controller
-        self.show_grades = show_grades
         layout = QVBoxLayout()
-        self.students = QListWidget()
-        for student in students:
-            item = QListWidgetItem()
-            item.setText(student)
-            self.students.addItem(item)
-        layout.addWidget(self.students)
+        self.controller = controller
 
-        self.select = QPushButton("Select")
-        self.select.clicked.connect(self.on_select_clicked)
-        layout.addWidget(self.select)
+        self.assignments = QListWidget()
+        assignments = controller.show_assignments()
+        for assignment in assignments:
+            item = QListWidgetItem()
+            item.setText(str(assignment))
+            self.assignments.addItem(item)
+
+        layout.addWidget(self.assignments)
+
+        selectButton = QPushButton("Get statistics")
+        selectButton.clicked.connect(self.on_select_click)
+        layout.addWidget(selectButton)
 
         self.setLayout(layout)
-        self.setWindowTitle("Select student")
+        self.setWindowTitle("Grade statistics")
+        self.resize(600, 200)
 
-    def on_select_clicked(self):
-        student = self.students.currentItem()
-        if student is None:
-            raise NotExistent("No student selected!")
-        student = student.text()
-        student = re.match(r"ID: \d+", student)
-        student = re.findall(r"\d+", student.group())[0]
-        assignments = self.controller.get_student_assignments(student, 0)
-        if len(assignments) == 0:
-            self.errorDialog = ErrorDialogBox(NotExistent("No assignments for this student!"))
+    def on_select_click(self):
+
+        assignmentID = self.assignments.currentItem()
+        assignmentID = re.match(r"ID: \d+", assignmentID.text())
+        assignmentID = re.findall(r"\d+", assignmentID.group())[0]
+
+        QWidget().setLayout(self.layout())
+
+        layout = QVBoxLayout()
+
+        myGradeList = QListWidget()
+        try:
+            grades = self.controller.statistic_grades(assignmentID)
+            for grade in grades:
+                item = QListWidgetItem()
+                item.setText(str(grade))
+                myGradeList.addItem(item)
+            layout.addWidget(myGradeList)
+
+            okButton = QPushButton("OK!")
+            okButton.clicked.connect(self.close)
+            layout.addWidget(okButton)
+
+            self.setLayout(layout)
+        except Exception as e:
+            self.errorDialog = ErrorDialogBox(e)
+            self.errorDialog.show()
+            self.close()
+
+
+class DeadlineStatisticsDialog(QWidget):
+    def __init__(self, controller: MainController, parent=None):
+        super(DeadlineStatisticsDialog, self).__init__(parent)
+
+        self.controller = controller
+        layout = QVBoxLayout()
+
+        self.assignments = QListWidget()
+        assignments = controller.show_assignments()
+        for assignment in assignments:
+            item = QListWidgetItem()
+            item.setText(str(assignment))
+            self.assignments.addItem(item)
+
+        layout.addWidget(self.assignments)
+
+        selectButton = QPushButton("Get statistics")
+        selectButton.clicked.connect(self.on_select_click)
+        layout.addWidget(selectButton)
+
+        self.setLayout(layout)
+        self.setWindowTitle("Deadline statistics")
+        self.resize(600, 200)
+
+    def on_select_click(self):
+        assignmentID = self.assignments.currentItem().text()
+        assignmentID = re.match(r"ID: \d+", assignmentID)
+        assignmentID = re.findall(r"\d+", assignmentID.group())[0]
+        try:
+            students = self.controller.statistic_assignments(assignmentID)
+
+            QWidget().setLayout(self.layout())
+
+            layout = QVBoxLayout()
+
+            objectList = QListWidget()
+            for student in students:
+                item = QListWidgetItem()
+                item.setText(str(student))
+                objectList.addItem(item)
+            layout.addWidget(objectList)
+
+            okButton = QPushButton("OK!")
+            okButton.clicked.connect(self.close)
+            layout.addWidget(okButton)
+
+            self.setLayout(layout)
+
+        except Exception as e:
+            self.errorDialog = ErrorDialogBox(e)
             self.errorDialog.show()
 
-        else:
-            self.gradeDialog = GradeDialogBox(self.controller, self.show_grades, assignments, student)
-            self.gradeDialog.show()
-        self.close()
+
+class SituationStatisticDialog(QWidget):
+    def __init__(self, controller: MainController, parent=None):
+        super(SituationStatisticDialog, self).__init__(parent)
+
+        self.controller = controller
+        layout = QVBoxLayout()
+
+        situations = self.controller.statistic_situations()
+
+        mySituationList = QListWidget()
+        for situation in situations:
+            item = QListWidgetItem()
+            item.setText(str(situation))
+            mySituationList.addItem(item)
+
+        layout.addWidget(mySituationList)
+
+        okButton = QPushButton("OK!")
+        okButton.clicked.connect(self.close)
+        layout.addWidget(okButton)
+
+        self.setLayout(layout)
+        self.resize(600, 300)
 
 # THIS ONE I A REALLY NICE IDEA, BUT IT SHOULD BE THOUGHT MORE OVER
 

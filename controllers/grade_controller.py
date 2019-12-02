@@ -91,10 +91,10 @@ class GradeController:
 
     def update_assignment_id(self, old_aid, new_aid):
         for grade in self._graderepo:
-            if grade.studentID == old_aid:
-                grade.studentID = new_aid
-        redo = FunctionCall(self.update_student_id, old_aid, new_aid)
-        undo = FunctionCall(self.update_student_id, new_aid, old_aid)
+            if grade.assignmentID == old_aid:
+                grade.assignmentID = new_aid
+        redo = FunctionCall(self.update_assignment_id, old_aid, new_aid)
+        undo = FunctionCall(self.update_assignment_id, new_aid, old_aid)
         operation = Operation(undo, redo)
         return operation
 

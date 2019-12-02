@@ -233,7 +233,7 @@ class Ui_MainWindow(object):
 
     def on_grade_click(self):
         try:
-            self.gradeStudentDialog = StudentSelectorDialogBox(self.controller, self.show_grades)
+            self.gradeStudentDialog = GradeDialogBox(self.controller, self.show_grades)
             self.gradeStudentDialog.show()
         except Exception as e:
             print(e)
@@ -263,6 +263,34 @@ class Ui_MainWindow(object):
         except Exception as e:
             self.errorDialog = ErrorDialogBox(e)
             self.errorDialog.show()
+
+
+    def on_grade_statistics_click(self):
+        try:
+            self.statisticGradesDialog = GradeStatisticsDialog(self.controller)
+            self.statisticGradesDialog.show()
+        except Exception as e:
+            self.errorDialog = ErrorDialogBox(e)
+            self.errorDialog.show()
+
+
+    def on_deadline_statistics_click(self):
+        try:
+            self.statisticDeadlineDialog = DeadlineStatisticsDialog(self.controller)
+            self.statisticDeadlineDialog.show()
+        except Exception as e:
+            self.errorDialog = ErrorDialogBox(e)
+            self.errorDialog.show()
+
+
+    def on_situation_statistic_click(self):
+        try:
+            self.statisticSituationDialog = SituationStatisticDialog(self.controller)
+            self.statisticSituationDialog.show()
+        except Exception as e:
+            self.errorDialog = ErrorDialogBox(e)
+            self.errorDialog.show()
+
 
     def init_main_menu(self, layout):
         _translate = QCoreApplication.translate
@@ -300,6 +328,24 @@ class Ui_MainWindow(object):
         assignGroupButton.setText(_translate("MainWindow", "Assign Group"))
         assignGroupButton.clicked.connect(self.on_assign_group_click)
         layout.addWidget(assignGroupButton)
+
+        statisticGradesButton = QPushButton(self.centralwidget)
+        statisticGradesButton.setObjectName("statisticGradesButton")
+        statisticGradesButton.setText(_translate("MainWindow", "Grade Statistics"))
+        statisticGradesButton.clicked.connect(self.on_grade_statistics_click)
+        layout.addWidget(statisticGradesButton)
+
+        statisticDeadlineButton = QPushButton(self.centralwidget)
+        statisticDeadlineButton.setObjectName("statisticDeadlineButton")
+        statisticDeadlineButton.setText(_translate("MainWindow", "Deadline Statistics"))
+        statisticDeadlineButton.clicked.connect(self.on_deadline_statistics_click)
+        layout.addWidget(statisticDeadlineButton)
+
+        statisticSituationButton = QPushButton(self.centralwidget)
+        statisticSituationButton.setObjectName("statisticSituationButton")
+        statisticSituationButton.setText(_translate("MainWindow", "Situation Statistics"))
+        statisticSituationButton.clicked.connect(self.on_situation_statistic_click)
+        layout.addWidget(statisticSituationButton)
 
         undoButton = QPushButton(self.centralwidget)
         undoButton.setObjectName("undoButton")
