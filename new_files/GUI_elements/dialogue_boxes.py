@@ -300,7 +300,7 @@ class AssignStudentDialogBox(QWidget):
             student = student.text()
             student = re.match(r"ID: \d+", student)
             student = re.findall(r"\d+", student.group())[0]
-            self.controller.assign(assignment, student)
+            self.controller.assign(student, assignment)
             self.showGrades()
             self.close()
         except Exception as e:
@@ -427,7 +427,7 @@ class GradeDialogBox(QWidget):
                 raise NotExistent("No assignment selected!")
             assignment = assignment.text()
             assignment = re.findall(r"\d+", assignment)[1]
-            self.controller.grade(assignment, self.student, self.grade.text())
+            self.controller.grade(self.student, assignment, self.grade.text())
             self.show_grades()
             self.close()
         except Exception as e:
@@ -626,11 +626,11 @@ class SelectorDialog(QWidget):
 class AssignStudentDialogBox:
     def __init__(self, controller: MainController, show_grades):
 
-        students = controller.show_students()
+        students.txt = controller.show_students()
         assignments = controller.show_assignments()
         self.controller = controller
         self.assignmentSelectorDialog = SelectorDialog(assignments, self.controller.assign, showGrades=show_grades)
-        self.studentSelectorDialog = SelectorDialog(students, self.controller.assign, nextDialog=self.assignmentSelectorDialog)
+        self.studentSelectorDialog = SelectorDialog(students.txt, self.controller.assign, nextDialog=self.assignmentSelectorDialog)
 
     def select(self):
         try:

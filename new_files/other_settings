@@ -1,0 +1,28 @@
+ALL SETTINGS ARE WITHOUT GUI
+FOR GUI PLACE INSIDE THE <UI> THE TEXT "GUI"
+
+====  TEXT PERSISTENCE SETTINGS  ====
+
+repository = textfile
+students = "students.txt"
+assignments = "assignments.txt"
+grades = "grades.txt"
+UI = ""
+
+
+====  NO PERSISTENCE SETTINGS  ====
+
+repository = inmemory
+students = ""
+assignments = ""
+grades = ""
+UI = ""
+
+
+====  BINARY PERSISTENCE SETTINGS  ====
+
+repository = binaryfile
+students = "students.pickle"
+assignments = "assignments.pickle"
+grades = "grades.pickle"
+UI = ""

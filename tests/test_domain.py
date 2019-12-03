@@ -34,7 +34,7 @@ class TestDomain(unittest.TestCase):
         grade = domain.Grade('1', '1', None)
         self.assertEqual(str(grade), 'Student: 1 | Assignment: 1 | Grade: None')
         grade = domain.Grade('1', '2', '8')
-        self.assertEqual(str(grade), 'Student: 2 | Assignment: 1 | Grade: 8')
+        self.assertEqual(str(grade), 'Student: 1 | Assignment: 2 | Grade: 8')
         with self.assertRaises(ValueError):
             grade = domain.Grade('1', '2', '11')
         with self.assertRaises(exceptions.NotAnInt):

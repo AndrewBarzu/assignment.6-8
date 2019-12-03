@@ -1,28 +1,29 @@
 from new_files.exceptions import *
 from new_files.domain import Student, Grade, Assignment
-from new_files.better_repo import Repository
 import datetime
 
 # TODO: VALIDATIONS BOIIIII
+
+def is_unique(objectList: list, myObject):
+    for obj in objectList:
+        if myObject.id == obj.id:
+            raise NotUnique("ID is not unique!")
 
 class StudentValidator:
     """
     Validates a student
     """
 
-    def validate_student(self, student: Student, student_repo: Repository):
+    def validate_student(self, student: Student):
         """
         Validates a student
         :param student: the new student
-        :param student_repo: the repository of students
+        :param student_repo: the repository of students.txt
         :return None: success
         :raises : not ok bro
         """
         self.validate_ID(student.id)
         self.validate_group(student.group)
-        for stud in student_repo:
-            if student.id == stud.id:
-                raise NotUnique("Student ID should be unique!")
 
     @staticmethod
     def validate_ID(ID: str):
@@ -40,7 +41,7 @@ class AssignmentValidator:
     Validates a student
     """
 
-    def validate_assignment(self, assignment: Assignment, assignment_repo: Repository):
+    def validate_assignment(self, assignment: Assignment):
         """
         Validates a student
         :param assignment: the new assignment
@@ -49,9 +50,6 @@ class AssignmentValidator:
         :raises : not ok bro
         """
         self.validate_ID(assignment.id)
-        for assig in assignment_repo:
-            if assignment.id == assig.id:
-                raise NotUnique("Assignment ID should be unique!")
 
     @staticmethod
     def validate_ID(ID: str):

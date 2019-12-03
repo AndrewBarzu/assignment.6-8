@@ -26,7 +26,7 @@ class StudentController:
         :raises NotAString: name is not a string
         """
         student = Student(sid, name, group)
-        self._studentValidator.validate_student(student, self._studentrepo)
+        self._studentValidator.validate_student(student)
         self._studentrepo.add_object(student)
         redo = FunctionCall(self.add_student, sid, name, group)
         undo = FunctionCall(self.remove_student, sid)
@@ -45,8 +45,6 @@ class StudentController:
         self._studentValidator.validate_ID(sid)
         operations = []
         idx = self._studentrepo.find_object(sid)
-        if idx is None:
-            raise NotExistent("Student does not exist!")
         student = self._studentrepo[idx]
         self._studentrepo.remove_object(student.id)
         redo = FunctionCall(self.remove_student, student.id)

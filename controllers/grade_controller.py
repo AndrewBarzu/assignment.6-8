@@ -22,7 +22,7 @@ class GradeController:
         self._graderepo.extend([Grade('1', '1', '10'), Grade('1', '9',  None), Grade('1', '10', None), Grade('2', '1', None), Grade('3', '1', '7'),
                                 Grade('2', '7', '10'), Grade('2', '8', '7'), Grade('2', '6', '9'), Grade('7', '1', None), Grade('7', '7', '4'), Grade('8', '7', '3')])
 
-    def assign(self, assignmentID, studentID, grade=None):
+    def assign(self, studentID, assignmentID, grade=None):
         """
         Function that assigns an assignment to a student
 
@@ -47,9 +47,9 @@ class GradeController:
                 break
         if ok == 0:
             raise NotExistent("Student does not exist!")
-        grade = Grade(assignmentID, studentID, grade)
+        grade = Grade(studentID, assignmentID, grade)
         self._graderepo.add(grade)
-        redo = FunctionCall(self.assign, assignmentID, studentID)
+        redo = FunctionCall(self.assign, studentID, assignmentID)
         undo = FunctionCall(self.remove_grade, studentID, assignmentID)
         operation = Operation(undo, redo)
         self._undoController.recordOp(operation)
@@ -63,7 +63,7 @@ class GradeController:
         for grade in grades:
             self._graderepo.delete(grade.studentID, grade.assignmentID)
             redo = FunctionCall(self.remove_grade, grade.studentID, grade.assignmentID)
-            undo = FunctionCall(self.assign, grade.assignmentID, grade.studentID, grade.grade)
+            undo = FunctionCall(self.assign, grade.studentID, grade.assignmentID, grade.grade)
             operation = Operation(undo, redo)
             operations.append(operation)
         return operations
@@ -75,7 +75,7 @@ class GradeController:
             if grade.assignmentID == assignmentID:
                 self._graderepo.delete(grade.studentID, grade.assignmentID)
                 redo = FunctionCall(self.remove_grade, grade.assignmentID, grade.studentID)
-                undo = FunctionCall(self.assign, grade.assignmentID, grade.studentID, grade.grade)
+                undo = FunctionCall(self.assign, grade.studentID, grade.assignmentID, grade.grade)
                 operation = Operation(undo, redo)
                 operations.append(operation)
         return operations
@@ -114,11 +114,9 @@ class GradeController:
             raise NotAnInt("Group should be an int!")
         if not assignmentID.isnumeric():
             raise NotAnInt("Assignment ID should be an int!")
-        exists = False
         assignment = self._assignmentrepo.find_object(assignmentID)
         if assignment is None:
             raise NotExistent("Assignment does not exist!")
-        appended = False
         cascading = []
         for student in self._studentrepo:
             if student.group == group:
@@ -129,17 +127,17 @@ class GradeController:
                         break
                 if not assigned:
                     studentID = student.id
-                    grade = Grade(assignmentID, studentID, None)
+                    grade = Grade(studentID, assignmentID, None)
                     self._graderepo.add(grade)
                     redo = FunctionCall(self.assign_group, assignmentID, group)
                     undo = FunctionCall(self.remove_grade, studentID, assignmentID)
                     operation = Operation(undo, redo)
                     cascading.append(operation)
-                    appended = True
-        if appended is False:
-            raise NotExistent("No assignment given! Probably group does not exist!")
-        cascading = CascadingOperation(cascading)
-        self._undoController.recordOp(cascading)
+        if len(cascading) > 0:
+            cascading = CascadingOperation(cascading)
+            self._undoController.recordOp(cascading)
+        else:
+            raise NotExistent("No students were assigned")
 
     def get_student_assignments(self, studentID, graded=None):
         """
@@ -153,7 +151,7 @@ class GradeController:
 
         return self._graderepo.get_student_grades(studentID, graded)
 
-    def grade(self, assignmentID, studentID, grade):
+    def grade(self, studentID, assignmentID, grade):
         """
         Gives a grade for an assignment of a student
 
@@ -171,8 +169,8 @@ class GradeController:
         if ok == 0:
             raise NotExistent("Student does not exist!")
         self._graderepo.grade(studentID, assignmentID, grade)
-        redo = FunctionCall(self.grade, assignmentID, studentID, grade)
-        undo = FunctionCall(self.grade, assignmentID, studentID, None)
+        redo = FunctionCall(self.grade, studentID, assignmentID, grade)
+        undo = FunctionCall(self.grade, studentID, assignmentID, None)
         operation = Operation(undo, redo)
         self._undoController.recordOp(operation)
 
@@ -224,10 +222,10 @@ class GradeController:
         """
         Gives the situation of all student, sorted by average grade for all assignments
 
-        :return list: The list of students, sorted by average grade
+        :return list: The list of students.txt, sorted by average grade
         """
         if len(self._graderepo) == 0:
-            raise NotExistent('No students have grades yet!')
+            raise NotExistent('No students.txt have grades yet!')
         situations = []
         count = []
         for grade in self._graderepo:

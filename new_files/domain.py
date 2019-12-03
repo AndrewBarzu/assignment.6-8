@@ -88,7 +88,7 @@ class Assignment:
         return 'ID: ' + self.id + ' | Description: ' + self.description + ' | Deadline: ' + str(self.deadline)
 
 class Grade:
-    def __init__(self, assignmentID, studentID, grade):
+    def __init__(self, studentID, assignmentID, grade):
         if assignmentID.isnumeric():
             self._assignmentid = assignmentID
         else:
@@ -97,7 +97,7 @@ class Grade:
             self._studentid = studentID
         else:
             raise NotAnInt("Student ID should be an int!")
-        if grade is None:
+        if grade is None or grade == 'None':
             self._grade = None
         elif type(grade) == int or grade.isnumeric():
             grade = int(grade)

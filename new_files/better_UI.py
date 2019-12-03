@@ -5,6 +5,7 @@ from controllers.undo_controller import UndoController
 from controllers.student_controller import StudentController
 from controllers.main_controller import MainController
 from new_files.exceptions import *
+import re
 import os
 
 class UI:   # pragma: no cover
@@ -96,7 +97,7 @@ class UI:   # pragma: no cover
         os.system('cls')
         grade = input("Grade > ")
         try:
-            self._controller.grade(assignmentID, studentID, grade)
+            self._controller.grade(studentID, assignmentID, grade)
         except (SetError, NotAnInt, NotExistent) as e:
             print(e)
 
@@ -109,7 +110,7 @@ class UI:   # pragma: no cover
         assignment = input("Assignment ID > ")
         os.system('cls')
         try:
-            self._controller.assign(assignment, student)
+            self._controller.assign(student, assignment)
         except (NotUnique, NotExistent) as e:
             print(e)
 
@@ -273,25 +274,12 @@ class UI:   # pragma: no cover
             cmd = input(' > ')
             os.system('cls')
             if cmd in commands.keys():
-                #try:
-                commands[cmd]()
-                #except Exception as e:
-                #    print(e)
+                try:
+                    commands[cmd]()
+                except Exception as e:
+                    print(e)
             elif cmd == 'init grades':
                 self._controller.init_grades()
             else:
                 print("Bad command!")
 
-
-studentRepo = Repository()
-studentRepo.initialize_students()
-assignmentRepo = Repository()
-assignmentRepo.initialize_assignments()
-gradeRepo = GradeRepository()
-undoController = UndoController()
-gradeController = GradeController(assignmentRepo, studentRepo, gradeRepo, undoController)
-studentController = StudentController(studentRepo, undoController, gradeController)
-assignmentController = AssignmentController(assignmentRepo, gradeController, undoController)
-main_controller = MainController(gradeController, studentController, undoController, assignmentController)
-ui = UI(main_controller)
-ui.start()

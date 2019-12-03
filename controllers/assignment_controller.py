@@ -15,7 +15,7 @@ class AssignmentController:
 
     def add_assignment(self, aid, desc, day, month, year):
         assignment = Assignment(aid, desc, year, month, day)
-        self._assignmentValidator.validate_assignment(assignment, self._assignmentRepo)
+        self._assignmentValidator.validate_assignment(assignment)
         self._assignmentRepo.add_object(assignment)
         redo = FunctionCall(self.add_assignment, aid, desc, day, month, year)
         undo = FunctionCall(self.remove_assignment, aid)
@@ -26,8 +26,6 @@ class AssignmentController:
         self._assignmentValidator.validate_ID(aid)
         operations = []
         idx = self._assignmentRepo.find_object(aid)
-        if idx is None:
-            raise NotExistent("Assignment does not exist!")
         assignment = self._assignmentRepo[idx]
         self._assignmentRepo.remove_object(aid)
         redo = FunctionCall(self.remove_assignment, aid)

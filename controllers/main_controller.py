@@ -41,11 +41,11 @@ class MainController:
     def get_student_assignments(self, studentID, graded):
         return self._gradeController.get_student_assignments(studentID, graded)
 
-    def grade(self, assignmentID, studentID, grade):
-        self._gradeController.grade(assignmentID, studentID, grade)
+    def grade(self, studentID, assignmentID, grade):
+        self._gradeController.grade(studentID, assignmentID, grade)
 
-    def assign(self, assignmentID, studentID):
-        self._gradeController.assign(assignmentID, studentID)
+    def assign(self, studentID, assignmentID):
+        self._gradeController.assign(studentID, assignmentID)
 
     def assign_group(self, assignmentID, group):
         self._gradeController.assign_group(assignmentID, group)

@@ -37,15 +37,15 @@ class TestServices(unittest.TestCase):
         main_controller = self.initController()
         main_controller.assign_group('1', '3')
         self.assertEqual(main_controller.show_grades(), ["Student: 1 | Assignment: 1 | Grade: None",
-                                                         "Student: 9 | Assignment: 1 | Grade: None",
-                                                         "Student: 10 | Assignment: 1 | Grade: None"])
+                                                         "Student: 1 | Assignment: 9 | Grade: None",
+                                                         "Student: 1 | Assignment: 10 | Grade: None"])
         with self.assertRaises(exceptions.NotExistent):
             main_controller.assign_group('20', '3')
         with self.assertRaises(exceptions.NotAnInt):
             main_controller.assign_group('a', '20')
         with self.assertRaises(exceptions.NotAnInt):
             main_controller.assign_group('20', 'a')
-        with self.assertRaises(exceptions.NotExistent):
+        with self.assertRaises(exceptions.NotUnique):
             main_controller.assign_group('1', '3')
 
     def test_grade(self):

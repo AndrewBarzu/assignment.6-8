@@ -1,9 +1,9 @@
 """
-1. Manage the list of students and available assignments. The application must allow the user to add,
-remove, update, and list both students and assignments.
+1. Manage the list of students.txt and available assignments. The application must allow the user to add,
+remove, update, and list both students.txt and assignments.
 
-2. Give assignments to a student or a group of students. In case an assignment is given to a group of
-students, every student in the group will receive it. In case there are students who were previously
+2. Give assignments to a student or a group of students.txt. In case an assignment is given to a group of
+students.txt, every student in the group will receive it. In case there are students.txt who were previously
 given that assignment, it will not be assigned again.
 
 3. Grade student for a given assignment. When grading, the program must allow the user to select the
@@ -12,8 +12,8 @@ given assignment cannot be changed. Deleting a student removes their assignments
 assignment also removes all grades at that assignment.
 
 4. Create statistics:
-- All students who received a given assignment, ordered by average grade for that assignment.
-- All students who are late in handing in at least one assignment. These are all the students who
+- All students.txt who received a given assignment, ordered by average grade for that assignment.
+- All students.txt who are late in handing in at least one assignment. These are all the students.txt who
 have an ungraded assignment for which the deadline has passed.
 Babeș-Bolyai University
 Cluj Napoca
@@ -86,7 +86,7 @@ class Services:
 
     def assign_group(self, assignmentID, group):
         """
-        Gives an assignment to a group of students
+        Gives an assignment to a group of students.txt
 
         :param assignmentID: the assignment
         :param group: the group
@@ -197,7 +197,7 @@ class Services:
                 transfer = TransferObj(str(self.find_student(grade.studentID)), grade.grade)
                 students.append(transfer)
         if len(students) == 0:
-            raise NotExistent("No students are graded for this assignment!")
+            raise NotExistent("No students.txt are graded for this assignment!")
         return students
 
     def statistic_assignments(self, assignmentID):
@@ -210,7 +210,7 @@ class Services:
             if grade.grade is None and assignment.id == grade.assignmentID and assignment.deadline < today:
                 students.append(str(self.find_student(grade.studentID)))
         if len(students) == 0:
-            raise NotExistent("No late students were found!")
+            raise NotExistent("No late students.txt were found!")
         return students
 
     @property
@@ -218,10 +218,10 @@ class Services:
         """
         Gives the situation of all student, sorted by average grade for all assignments
 
-        :return list: The list of students, sorted by average grade
+        :return list: The list of students.txt, sorted by average grade
         """
         if len(self._grades) == 0:
-            raise NotExistent('No students have grades yet!')
+            raise NotExistent('No students.txt have grades yet!')
         students = []
         count = []
         for grade in self._grades:
@@ -248,7 +248,7 @@ class Services:
         for i in range(len(students)):
             students[i].grade /= count[i]
             students[i].grade = round(students[i].grade, 2)
-        return self.sort_grades(students)       # sorted(students, key=operator.attrgetter('grade'), reverse=True)
+        return self.sort_grades(students)       # sorted(students.txt, key=operator.attrgetter('grade'), reverse=True)
 
 
     def add_student(self, sid, name, group):

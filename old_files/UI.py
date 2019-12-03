@@ -15,7 +15,7 @@ class UI:   # pragma: no cover
         print("1. Add student")
         print("2. Remove student")
         print("3. Update student")
-        print("4. Show students")
+        print("4. Show students.txt")
         print("0. Back")
 
 
@@ -38,7 +38,7 @@ class UI:   # pragma: no cover
         print("6. Assign group")
         print("7. Undo")
         print("8. Redo")
-        print("9. Show assigned students")
+        print("9. Show assigned students.txt")
         print("0. Exit")
 
 
@@ -46,7 +46,7 @@ class UI:   # pragma: no cover
     def print_statistics_menu():
         print("1. Grade statistics for an assignment")
         print("2. Deadline statistics for an assignment")
-        print("3. Situation of all students")
+        print("3. Situation of all students.txt")
         print("0. Back")
 
 

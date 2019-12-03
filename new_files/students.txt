@@ -1,0 +1,11 @@
+1,Paricel,3
+2,Marcel,1
+3,Georgel,2
+4,George,1
+5,Gigel,4
+6,Gicu,7
+7,Mercedesa,2
+8,Maria,7
+9,Marian,3
+10,Burticioaia,3
+11,pulica,3

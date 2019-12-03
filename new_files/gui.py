@@ -16,7 +16,6 @@ class Ui_MainWindow(object):
         self.controller = controller
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.controller.init_grades()
 
         mainLayout = QVBoxLayout()
         mainLayout.setObjectName("mainLayout")
@@ -367,21 +366,3 @@ class Ui_MainWindow(object):
     def retranslateUi(MainWindow):
         _translate = QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-
-studentRepo = Repository()
-studentRepo.initialize_students()
-assignmentRepo = Repository()
-assignmentRepo.initialize_assignments()
-gradeRepo = GradeRepository()
-undoController = UndoController()
-gradeController = GradeController(assignmentRepo, studentRepo, gradeRepo, undoController)
-studentController = StudentController(studentRepo, undoController, gradeController)
-assignmentController = AssignmentController(assignmentRepo, gradeController, undoController)
-main_controller = MainController(gradeController, studentController, undoController, assignmentController)
-
-gui = Ui_MainWindow()
-app = QApplication(sys.argv)
-main_window = QMainWindow()
-gui.setupUi(main_window, main_controller)
-main_window.show()
-sys.exit(app.exec_())

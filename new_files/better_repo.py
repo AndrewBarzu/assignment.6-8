@@ -1,4 +1,5 @@
 from new_files.domain import *
+import new_files.validation_service
 
 class Repository:
     def __init__(self, student_list=None):
@@ -27,6 +28,7 @@ class Repository:
         :return: None if successful
         :raises Exception: from domain, handled by UI
         """
+        new_files.validation_service.is_unique(self._objects, object)
         self._objects.append(object)
 
     def remove_object(self, id):
@@ -66,7 +68,15 @@ class Repository:
         return None
 
     def __getitem__(self, item):
+        if item is None:
+            raise NotExistent("Not existent!")
         return self._objects[item]
+
+    def __str__(self):
+        string = "Repository: \n"
+        for object in self._objects:
+            string += str(object) + '\n'
+        return string
 
 class GradeRepository:
     def __init__(self):
@@ -105,6 +115,12 @@ class GradeRepository:
 
     def __len__(self):
         return len(self._grades)
+
+    def __str__(self):
+        string = "Repository: \n"
+        for grade in self._grades:
+            string += str(grade) + '\n'
+        return string
 
     def extend(self, more):
         self._grades.extend(more)
