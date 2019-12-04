@@ -74,9 +74,9 @@ class StudentController:
         idx = self._studentrepo.find_object(sid)
         if idx is None:
             raise NotExistent("Student does not exist")
-        if (new_id.isnumeric() or new_id == '') and new_id != sid:
+        if new_id.isnumeric() or new_id == '':
             for s in self._studentrepo:
-                if s.id == new_id:
+                if s.id == new_id and s.id != sid:
                     raise NotUnique("ID should be unique!")
         else:
             raise NotAnInt("ID should be an int!")
@@ -107,7 +107,7 @@ class StudentController:
         undo = FunctionCall(self.update_student, student.id, old_student.id, old_student.name, old_student.group)
         operation = Operation(undo, redo)
         operations.append(operation)
-        operations.append(self._gradeController.update_student_id(old_student.id, new_id))
+        operations.append(self._gradeController.update_student_id(old_student.id, student.id))
         cascade = CascadingOperation(operations)
         self._undoController.recordOp(cascade)
 

@@ -1,0 +1,52 @@
+[
+    {
+        "id": "1",
+        "name": "Paricel",
+        "group": "3"
+    },
+    {
+        "id": "2",
+        "name": "Marcel",
+        "group": "1"
+    },
+    {
+        "id": "3",
+        "name": "Georgel",
+        "group": "2"
+    },
+    {
+        "id": "4",
+        "name": "George",
+        "group": "1"
+    },
+    {
+        "id": "5",
+        "name": "Gigel",
+        "group": "4"
+    },
+    {
+        "id": "6",
+        "name": "Gicu",
+        "group": "7"
+    },
+    {
+        "id": "7",
+        "name": "Mercedesa",
+        "group": "2"
+    },
+    {
+        "id": "8",
+        "name": "Maria",
+        "group": "7"
+    },
+    {
+        "id": "9",
+        "name": "Marian",
+        "group": "3"
+    },
+    {
+        "id": "10",
+        "name": "Marcela",
+        "group": "3"
+    }
+]

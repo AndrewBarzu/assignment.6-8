@@ -6,6 +6,7 @@ from controllers.undo_controller import UndoController
 from new_files.better_UI import UI
 from new_files.persistent_repos import PersistentStudentRepo, PersistentAssignmentRepo, PersistentGradeRepo
 from new_files.gui import Ui_MainWindow, QApplication, QMainWindow
+from new_files.json_repo import StudentRepoJSON, AssignmentRepoJSON, GradeRepoJSON
 import sys
 
 from new_files.better_repo import Repository, GradeRepository
@@ -36,6 +37,11 @@ class AppStart:
             assignmentRepo = Repository()
             assignmentRepo.initialize_assignments()
             gradeRepo = GradeRepository()
+        elif self._settings['repository'] == "JSON":
+            studentRepo = StudentRepoJSON(self._settings['students'])
+            assignmentRepo = AssignmentRepoJSON(self._settings['assignments'])
+            gradeRepo = GradeRepoJSON(self._settings['grades'])
+            pass
         else:
             studentRepo = PersistentStudentRepo(self._settings['students'], self._settings['repository'])
             assignmentRepo = PersistentAssignmentRepo(self._settings['assignments'], self._settings['repository'])

@@ -1,6 +1,6 @@
 from new_files.better_repo import Repository, GradeRepository
 from new_files.domain import Student, Assignment, Grade
-import pickle
+import _pickle as pickle
 
 class PersistentStudentRepo(Repository):
     def __init__(self, fileName, storageType):

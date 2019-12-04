@@ -18,15 +18,15 @@ students = [Student('1', 'Paricel', '3'), Student('2', 'Marcel', '1'), Student('
 grades = [Grade('1', '1', '10'), Grade('1', '9',  None), Grade('1', '10', None), Grade('2', '1', None), Grade('3', '1', '7'),
           Grade('2', '7', '10'), Grade('2', '8', '7'), Grade('2', '6', '9'), Grade('7', '1', None), Grade('7', '7', '4'), Grade('8', '7', '3')]
 
-with open("assignments.pickle", 'wb') as f:
+with open("persistent_files/assignments.pickle", 'wb') as f:
     for assignment in assignments:
         pickle.dump(assignment, f)
 
-with open("students.pickle", 'wb') as f:
+with open("persistent_files/students.pickle", 'wb') as f:
     for student in students:
         pickle.dump(student, f)
 
-with open("grades.pickle", 'wb') as f:
+with open("persistent_files/grades.pickle", 'wb') as f:
     for grade in grades:
         pickle.dump(grade, f)
 

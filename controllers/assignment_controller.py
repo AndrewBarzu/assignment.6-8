@@ -44,9 +44,9 @@ class AssignmentController:
         if idx is None:
             raise NotExistent("Assignment does not exist!")
 
-        if (new_aid.isnumeric() or new_aid == '') and new_aid != aid:
+        if new_aid.isnumeric() or new_aid == '':
             for assig in self._assignmentRepo:
-                if assig.id == new_aid:
+                if assig.id == new_aid and assig.id != aid:
                     raise NotUnique("ID should be unique!")
         else:
             raise NotAnInt("ID should be an int!")
@@ -88,7 +88,7 @@ class AssignmentController:
         undo = FunctionCall(self.update_assignment, assignment.id, old_assignment.id, old_assignment.description,
                                                    str(old_assignment.deadline.day), str(old_assignment.deadline.month), str(old_assignment.deadline.year))
         operations.append(Operation(undo, redo))
-        operations.append(self._gradeController.update_assignment_id(old_assignment.id, new_aid))
+        operations.append(self._gradeController.update_assignment_id(old_assignment.id, assignment.id))
         cascade = CascadingOperation(operations)
         self._undoController.recordOp(cascade)
 
