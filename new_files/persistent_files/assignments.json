@@ -1,11 +1,11 @@
 [
     {
         "id": "1",
-        "description": "bakery app",
+        "description": "do json repo",
         "deadline": {
-            "day": 19,
-            "month": 12,
-            "year": 2019
+            "day": "20",
+            "month": "12",
+            "year": "2019"
         }
     }
 ]

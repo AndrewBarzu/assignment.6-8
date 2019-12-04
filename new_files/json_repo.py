@@ -56,9 +56,9 @@ class AssignmentRepoJSON(Repository):
                     "id": assignment.id,
                     "description": assignment.description,
                     "deadline": {
-                                    "day": assignment.deadline.day,
-                                    "month": assignment.deadline.month,
-                                    "year": assignment.deadline.year
+                                    "day": assignment.deadline.day.__str__(),
+                                    "month": assignment.deadline.month.__str__(),
+                                    "year": assignment.deadline.year.__str__()
                                 }
                 }
                 for assignment in self._objects]
@@ -130,8 +130,20 @@ class GradeRepoJSON(GradeRepository):
         self._pretty_format(serialized)
 
     def _pretty_format(self, myJson):
-        with open(self._fileName, 'r') as f:
+        with open(self._fileName, 'w') as f:
             f.write(json.dumps(myJson, indent=4))
+
+    def add(self, grade):
+        super(GradeRepoJSON, self).add(grade)
+        self._update_json()
+
+    def delete(self, studentID, assignmentID):
+        super(GradeRepoJSON, self).delete(studentID, assignmentID)
+        self._update_json()
+
+    def grade(self, sid, aid, new_grade):
+        super(GradeRepoJSON, self).grade(sid, aid, new_grade)
+        self._update_json()
 
 
 
