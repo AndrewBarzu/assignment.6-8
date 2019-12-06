@@ -45,6 +45,9 @@ class Student:
     def __str__(self):
         return 'ID: ' + str(self.id) + ' | Name: ' + self.name + ' | Group: ' + str(self.group)
 
+    def __eq__(self, other):
+        return self.id == other.id and self.name == other.name and self.group == other.group
+
 class Assignment:
     def __init__(self, assignmentID, description, year, month, day):
         self._assignmentID = assignmentID
@@ -102,7 +105,7 @@ class Grade:
         elif type(grade) == int or grade.isnumeric():
             grade = int(grade)
             if grade in range(11):
-                self._grade = int(grade)
+                self._grade = grade
             else:
                 raise ValueError("Grade should be from 0 to 10!")
         else:

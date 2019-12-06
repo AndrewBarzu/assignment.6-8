@@ -141,9 +141,6 @@ class UI:   # pragma: no cover
     def update_student(self):
         os.system('cls')
         id = input('Old ID > ')
-        print('------------------------------------------------------------')
-        print('If you don\'t want to replace a field, leave it empty!')
-        print('------------------------------------------------------------')
         new_id = input('New ID > ')
         new_name = input('New name > ')
         new_group = input('New group > ')
@@ -185,9 +182,6 @@ class UI:   # pragma: no cover
     def update_assignment(self):
         os.system('cls')
         id = input('Old ID > ')
-        print('------------------------------------------------------------')
-        print('If you don\'t want to replace a field, leave it empty!')
-        print('------------------------------------------------------------')
         new_id = input('New ID > ')
         new_name = input('New description > ')
         print('===New Deadline===')
@@ -276,7 +270,3 @@ class UI:   # pragma: no cover
             else:
                 print("Bad command!")
 
-
-service = Services(Repository(Repository.initialize_students()), Repository(Repository.initialize_assignments()))
-ui = UI(service)
-ui.start()

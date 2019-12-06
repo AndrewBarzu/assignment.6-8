@@ -72,6 +72,10 @@ class Repository:
             raise NotExistent("Not existent!")
         return self._objects[item]
 
+    def __setitem__(self, key, value):
+        self._objects[key] = value
+
+
     def __str__(self):
         string = "Repository: \n"
         for object in self._objects:
@@ -83,17 +87,16 @@ class GradeRepository:
         self._grades = []
 
     def add(self, grade):
-        for selfgrade in self._grades:
-            if selfgrade == grade:
+        for myGrade in self._grades:
+            if myGrade == grade:
                 raise NotUnique("The student already has that assignment!")
         self._grades.append(grade)
 
     def delete(self, studentID, assignmentID):
-        for grade in self._grades:
-            if grade.studentID == studentID and grade.assignmentID == assignmentID:
-                self._grades.remove(grade)
+        for myGrade in self._grades:
+            if myGrade.studentID == studentID and myGrade.assignmentID == assignmentID:
+                self._grades.remove(myGrade)
                 return
-        raise NotExistent("Grade ID's not found!")
 
     def grade(self, sid, aid, new_grade):
         for grade in self._grades:

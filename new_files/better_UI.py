@@ -183,10 +183,10 @@ class UI:   # pragma: no cover
     def remove_assignment(self):
         os.system('cls')
         id = input('ID > ')
-        try:
-            self._controller.remove_assignment(id)
-        except Exception as e:
-            print(e)
+        #try:
+        self._controller.remove_assignment(id)
+        #except Exception as e:
+        #    print(e)
 
 
     def update_assignment(self):
@@ -274,10 +274,10 @@ class UI:   # pragma: no cover
             cmd = input(' > ')
             os.system('cls')
             if cmd in commands.keys():
-                try:
-                    commands[cmd]()
-                except Exception as e:
-                    print(e)
+                #try:
+                commands[cmd]()
+                #except Exception as e:
+                #    print(e)
             elif cmd == 'init grades':
                 self._controller.init_grades()
             else:

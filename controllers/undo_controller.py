@@ -58,4 +58,5 @@ class CascadingOperation:
             op.undo()
 
     def redo(self):
-        self._operations[0].redo()
+        for op in self._operations:
+            op.redo()
