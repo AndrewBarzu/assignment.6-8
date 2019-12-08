@@ -46,16 +46,10 @@ class StudentController:
         :raises NotUnique: new id is not unique
         :raises NoUpdate: student was not changed
         """
-        ValidationServices.validate_id(studentID)
         idx = self._studentRepo.find_object(studentID)
-        if idx is None:
-            raise NotExistent("Student does not exist")
-        if newStudent.id.isnumeric() or newStudent.id == '':
-            for student in self._studentRepo:
-                if student.id == newStudent.id and student.id != studentID:
-                    raise NotUnique("ID should be unique!")
-        else:
-            raise NotAnInt("ID should be an int!")
+        for student in self._studentRepo:
+            if student.id == newStudent.id and student.id != studentID:
+                raise NotUnique("ID should be unique!")
         self._studentRepo[idx] = newStudent
 
     def get_students(self):

@@ -148,7 +148,7 @@ class MainController:
             raise NotExistent("Assignment does not exist!")
         studentsInGroup = self._studentController.get_students_in_group(group)
         if len(studentsInGroup) == 0:
-            return
+            raise NotExistent("Group does not exist!")
         cascading = []
         for student in studentsInGroup:
             self._gradeController.assign(student.id, assignmentID)
@@ -213,7 +213,7 @@ class MainController:
         """
 
         grades = self._gradeController.get_grades()
-        if grades == 0:
+        if len(grades) == 0:
             raise NotExistent('No students have grades yet!')
         situations = []
         count = []

@@ -1,5 +1,7 @@
 from new_files.domain import *
 import new_files.validation_service
+import names
+import random
 
 class Repository:
     def __init__(self, student_list=None):
@@ -15,10 +17,9 @@ class Repository:
                          Assignment('9', 'Marian', '2015', '1', '24'), Assignment('10', 'Dani', '1999', '10', '24')]
 
     def initialize_students(self):    # pragma: no cover
-        self._objects = [Student('1', 'Paricel', '3'), Student('2', 'Marcel', '1'), Student('3', 'Georgel', '2'),
-                         Student('4', 'George', '1'), Student('5', 'Gigel', '4'), Student('6', 'Gicu', '7'),
-                         Student('7', 'Mercedesa', '2'), Student('8', 'Maria', '7'), Student('9', 'Marian', '3'),
-                         Student('10', 'Marcela', '3')]
+        self._objects =[]
+        for i in range(11):
+            self._objects.append(Student(str(i+1), names.get_full_name(), str(random.randint(1, 10))))
 
     def add_object(self, object):
         """

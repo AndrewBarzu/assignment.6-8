@@ -29,7 +29,9 @@ class TestServices(unittest.TestCase):
         with self.assertRaises(exceptions.NotExistent):
             main_controller.assign('1', 'b')
         with self.assertRaises(exceptions.NotExistent):
-            main_controller.assign('20', '17')
+            main_controller.assign('20', '7')
+        main_controller.assign('1', '1')
+        self.assertEqual(len(main_controller._gradeController._gradeRepo), 1)
 
     def test_assign_group(self):
         main_controller = self.initController()
@@ -43,6 +45,8 @@ class TestServices(unittest.TestCase):
             main_controller.assign_group('a', '20')
         with self.assertRaises(exceptions.NotAnInt):
             main_controller.assign_group('20', 'a')
+        with self.assertRaises(exceptions.NotExistent):
+            main_controller.assign_group('1', '100')
 
     def test_grade(self):
         main_controller = self.initController()
@@ -136,6 +140,12 @@ class TestServices(unittest.TestCase):
 
     def test_statistics(self):
         main_controller = self.initController()
+        with self.assertRaises(exceptions.NotExistent):
+            main_controller.statistic_assignments('11')
+        with self.assertRaises(exceptions.NotExistent):
+            main_controller.statistic_grades('1')
+        with self.assertRaises(exceptions.NotExistent):
+            main_controller.statistic_situations()
         main_controller.init_grades()
         situations = main_controller.statistic_situations()
         grades_statistic = main_controller.statistic_grades('1')
@@ -143,6 +153,10 @@ class TestServices(unittest.TestCase):
 
     def test_undo_redo(self):
         main_controller = self.initController()
+        with self.assertRaises(ValueError):
+            main_controller.undo()
+        with self.assertRaises(ValueError):
+            main_controller.redo()
         main_controller.init_grades()
         main_controller.remove_student('1')
         main_controller.undo()

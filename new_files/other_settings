@@ -4,42 +4,42 @@ FOR GUI PLACE INSIDE THE <UI> THE TEXT "GUI"
 ====  TEXT PERSISTENCE SETTINGS  ====
 
 repository = textfile
-students = "persistent_files/students.txt"
-assignments = "persistent_files/assignments.txt"
-grades = "persistent_files/grades.txt"
-UI = ""
+students = persistent_files/students.txt
+assignments = persistent_files/assignments.txt
+grades = persistent_files/grades.txt
+UI =
 
 
 ====  NO PERSISTENCE SETTINGS  ====
 
 repository = inmemory
-students = ""
-assignments = ""
-grades = ""
-UI = ""
+students =
+assignments =
+grades =
+UI =
 
 
 ====  BINARY PERSISTENCE SETTINGS  ====
 
 repository = binaryfile
-students = "persistent_files/students.pickle"
-assignments = "persistent_files/assignments.pickle"
-grades = "persistent_files/grades.pickle"
-UI = ""
+students = persistent_files/students.pickle
+assignments = persistent_files/assignments.pickle
+grades = persistent_files/grades.pickle
+UI =
 
 
 ====  JSON PERSISTENCE SETTINGS  ====
 
 repository = JSON
-students = "persistent_files/students.json"
-assignments = "persistent_files/assignments.json"
-grades = "persistent_files/grades.json"
-UI = ""
+students = persistent_files/students.json
+assignments = persistent_files/assignments.json
+grades = persistent_files/grades.json
+UI =
 
 ==== DATABASE PERSISTENCE SETTINGS ====
 ~ da one tru wae ~
 repository = DATABASE
-students = ""
-assignments = ""
-grades = ""
-UI = ""
+students =
+assignments =
+grades =
+UI =

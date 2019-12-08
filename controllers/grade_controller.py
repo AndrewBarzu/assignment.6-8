@@ -43,24 +43,10 @@ class GradeController:
     def get_assignment_grades(self, assignmentID):
         return [grade for grade in self._gradeRepo if grade.assignmentID == assignmentID]
 
-    def remove_assignment_grade(self, assignmentID):
-        operations = []
-        grades = self._gradeRepo
-        for grade in grades:
-            if grade.assignmentID == assignmentID:
-                self._gradeRepo.delete(grade.studentID, grade.assignmentID)
-                redo = FunctionCall(self.remove_grade, grade.assignmentID, grade.studentID)
-                undo = FunctionCall(self.assign, grade.studentID, grade.assignmentID, grade.grade)
-                operation = Operation(undo, redo)
-                operations.append(operation)
-        return operations
-
     def update_student_id(self, old_sid, new_sid):
         for grade in self._gradeRepo:
             if grade.studentID == old_sid:
                 grade.studentID = new_sid
-                print(new_sid)
-                print(grade)
         redo = FunctionCall(self.update_student_id, old_sid, new_sid)
         undo = FunctionCall(self.update_student_id, new_sid, old_sid)
         operation = Operation(undo, redo)
