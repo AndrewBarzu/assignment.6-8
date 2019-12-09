@@ -29,7 +29,7 @@ class AssignmentController:
                     raise NotUnique("ID should be unique!")
         else:
             raise NotAnInt("ID should be an int!")
-        self._assignmentRepo[idx] = newAssignment
+        self._assignmentRepo.update_object(idx, newAssignment)
 
 
     def get_assignments(self):

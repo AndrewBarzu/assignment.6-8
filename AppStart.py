@@ -26,6 +26,7 @@ class AppStart:
             assignmentRepo = Repository()
             assignmentRepo.initialize_assignments()
             gradeRepo = GradeRepository()
+            gradeRepo.init_grades()
         elif self._settings.repository == "JSON":
             studentRepo = StudentRepoJSON(self._settings.students)
             assignmentRepo = AssignmentRepoJSON(self._settings.assignments)

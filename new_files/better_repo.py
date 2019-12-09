@@ -2,6 +2,7 @@ from new_files.domain import *
 import new_files.validation_service
 import names
 import random
+import datetime
 
 class Repository:
     def __init__(self, student_list=None):
@@ -9,16 +10,31 @@ class Repository:
             student_list = []
         self._objects = student_list
 
+    @staticmethod
+    def _rand_date(start, end):
+        delta = end-start
+        int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
+        random_second = random.randrange(int_delta)
+        return start + datetime.timedelta(seconds=random_second)
+
+    @staticmethod
+    def _rand_description():
+        result = ''
+        result += random.choices(['Do', 'Make', 'Find', 'Create', 'Develop'])[0] + ' '
+        result += random.choices(['dishes', 'database', 'online store', 'web application', 'pet shop', 'bakery', 'car rental application'], weights=[2, 11, 11, 11, 11, 11, 11])[0] + ' '
+        result += 'for '
+        result += names.get_full_name()
+        return result
+
     def initialize_assignments(self):  # pragma: no cover
-        self._objects = [Assignment('1', 'Paricel', '1999', '10', '15'), Assignment('2', 'Marcel', '2010', '12', '19'),
-                         Assignment('3', 'Georgel', '2019', '11', '29'), Assignment('4', 'George', '2020', '1', '10'),
-                         Assignment('5', 'Gigel', '2019', '12', '18'), Assignment('6', 'Gicu', '2019', '12', '7'),
-                         Assignment('7', 'Mercedesa', '2021', '9', '20'), Assignment('8', 'Maria', '2020', '8', '27'),
-                         Assignment('9', 'Marian', '2015', '1', '24'), Assignment('10', 'Dani', '1999', '10', '24')]
+        self._objects = []
+        for i in range(10):
+            myDate = self._rand_date(datetime.datetime(2018, 12, 30), datetime.datetime(2021, 12, 30))
+            self._objects.append(Assignment(str(i+1), self._rand_description(), str(myDate.year), str(myDate.month), str(myDate.day)))
 
     def initialize_students(self):    # pragma: no cover
-        self._objects =[]
-        for i in range(11):
+        self._objects = []
+        for i in range(10):
             self._objects.append(Student(str(i+1), names.get_full_name(), str(random.randint(1, 10))))
 
     def add_object(self, object):
@@ -87,6 +103,16 @@ class GradeRepository:
     def __init__(self):
         self._grades = []
 
+    def init_grades(self):
+        for i in range(10):
+            myGrade = Grade(str(random.randint(1, 10)), str(random.randint(1, 10)), str(random.choice([None, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])))
+            while True:
+                try:
+                    self.add(myGrade)
+                    break
+                except NotUnique:
+                    myGrade = Grade(str(random.randint(1, 10)), str(random.randint(1, 10)), str(random.choice([None, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])))
+
     def add(self, grade):
         for myGrade in self._grades:
             if myGrade == grade:
@@ -116,6 +142,9 @@ class GradeRepository:
 
     def __getitem__(self, item):
         return self._grades[item]
+
+    def __setitem__(self, key, value):
+        self._grades[key] = value
 
     def __len__(self):
         return len(self._grades)

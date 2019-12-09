@@ -5,17 +5,8 @@ import new_files.exceptions as exceptions
 import operator
 
 class GradeController:
-    def __init__(self, gradeRepo: GradeRepository):
+    def __init__(self, gradeRepo):
         self._gradeRepo = gradeRepo
-
-    def init_grades(self): # Pragma: no cover
-        """
-        Initializes a list of grades
-
-        :return list: the list of grades
-        """
-        self._gradeRepo.extend([Grade('1', '1', '10'), Grade('1', '9', None), Grade('1', '10', None), Grade('2', '1', None), Grade('3', '1', '7'),
-                                Grade('2', '7', '10'), Grade('2', '8', '7'), Grade('2', '6', '9'), Grade('7', '1', None), Grade('7', '7', '4'), Grade('8', '7', '3')])
 
     def assign(self, studentID, assignmentID, grade="None"):
         """
@@ -44,18 +35,18 @@ class GradeController:
         return [grade for grade in self._gradeRepo if grade.assignmentID == assignmentID]
 
     def update_student_id(self, old_sid, new_sid):
-        for grade in self._gradeRepo:
-            if grade.studentID == old_sid:
-                grade.studentID = new_sid
+        for i in range(len(self._gradeRepo)):
+            if self._gradeRepo[i].studentID == old_sid:
+                self._gradeRepo[i] = Grade(new_sid, self._gradeRepo[i].assignmentID, self._gradeRepo[i].grade)
         redo = FunctionCall(self.update_student_id, old_sid, new_sid)
         undo = FunctionCall(self.update_student_id, new_sid, old_sid)
         operation = Operation(undo, redo)
         return operation
 
     def update_assignment_id(self, old_aid, new_aid):
-        for grade in self._gradeRepo:
-            if grade.assignmentID == old_aid:
-                grade.assignmentID = new_aid
+        for i in range(len(self._gradeRepo)):
+            if self._gradeRepo[i].studentID == old_aid:
+                self._gradeRepo[i] = Grade(self._gradeRepo[i].studentID, new_aid, self._gradeRepo[i].grade)
         redo = FunctionCall(self.update_assignment_id, old_aid, new_aid)
         undo = FunctionCall(self.update_assignment_id, new_aid, old_aid)
         operation = Operation(undo, redo)

@@ -300,7 +300,7 @@ class AssignStudentDialogBox(QWidget):
             student = student.text()
             student = re.match(r"ID: \d+", student)
             student = re.findall(r"\d+", student.group())[0]
-            self.controller.assign(student, assignment)
+            self.controller.assign(student, assignment, None)
             self.showGrades()
             self.close()
         except Exception as e:

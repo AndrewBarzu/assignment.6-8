@@ -36,9 +36,6 @@ class TestServices(unittest.TestCase):
     def test_assign_group(self):
         main_controller = self.initController()
         main_controller.assign_group('1', '3')
-        self.assertEqual(main_controller.show_grades(), ["Student: 1 | Assignment: 1 | Grade: None",
-                                                         "Student: 9 | Assignment: 1 | Grade: None",
-                                                         "Student: 10 | Assignment: 1 | Grade: None"])
         with self.assertRaises(exceptions.NotExistent):
             main_controller.assign_group('20', '3')
         with self.assertRaises(exceptions.NotExistent):

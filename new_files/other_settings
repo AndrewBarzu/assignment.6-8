@@ -1,14 +1,5 @@
 ALL SETTINGS ARE WITHOUT GUI
-FOR GUI PLACE INSIDE THE <UI> THE TEXT "GUI"
-
-====  TEXT PERSISTENCE SETTINGS  ====
-
-repository = textfile
-students = persistent_files/students.txt
-assignments = persistent_files/assignments.txt
-grades = persistent_files/grades.txt
-UI =
-
+FOR GUI PLACE INSIDE 'UI' THE TEXT <GUI>
 
 ====  NO PERSISTENCE SETTINGS  ====
 
@@ -16,6 +7,15 @@ repository = inmemory
 students =
 assignments =
 grades =
+UI =
+
+
+====  TEXT PERSISTENCE SETTINGS  ====
+
+repository = textfile
+students = persistent_files/students.txt
+assignments = persistent_files/assignments.txt
+grades = persistent_files/grades.txt
 UI =
 
 

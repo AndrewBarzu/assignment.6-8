@@ -36,7 +36,7 @@ class MainController:
         for grade in studentGrades:
             self._remove_grade(grade.studentID, grade.assignmentID)
             redo = FunctionCall(self._remove_grade, grade.studentID, grade.assignmentID)
-            undo = FunctionCall(self.assign, grade.studentID, grade.assignmentID)
+            undo = FunctionCall(self._gradeController.assign, grade.studentID, grade.assignmentID, grade.grade)
             operation = Operation(undo, redo)
             operations.append(operation)
 
@@ -90,7 +90,7 @@ class MainController:
         for grade in assignmentGrades:
             self._remove_grade(grade.studentID, grade.assignmentID)
             redo = FunctionCall(self._remove_grade, grade.studentID, grade.assignmentID)
-            undo = FunctionCall(self.assign, grade.studentID, grade.assignmentID)
+            undo = FunctionCall(self._gradeController.assign, grade.studentID, grade.assignmentID, grade.grade)
             operation = Operation(undo, redo)
             operations.append(operation)
 
@@ -130,7 +130,7 @@ class MainController:
         operation = Operation(undo, redo)
         self._undoController.recordOp(operation)
 
-    def assign(self, studentID, assignmentID):
+    def assign(self, studentID, assignmentID, grade):
         if self._assignmentController.find_assignment(assignmentID) is None:
             raise NotExistent("Assignment does not exist!")
         if self._studentController.find_student(studentID) is None:
@@ -250,10 +250,5 @@ class MainController:
     def redo(self):
         self._undoController.redo()
 
-    def init_grades(self): # Pragma: no cover
-        """
-        Initializes a list of grades
-
-        :return list: the list of grades
-        """
-        self._gradeController.init_grades()
+    def init_grades(self):
+        self._gradeController._gradeRepo.init_grades()

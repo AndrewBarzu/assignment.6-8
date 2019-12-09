@@ -1,6 +1,7 @@
 from new_files.better_repo import Repository, GradeRepository
 from new_files.domain import Grade, Assignment, Student
 import pymongo
+from copy import deepcopy
 
 class StudentMongoRepo(Repository):
     def __init__(self, client: pymongo.MongoClient):
@@ -31,8 +32,9 @@ class StudentMongoRepo(Repository):
         self._myStudentCollection.delete_one({'id': id})
 
     def update_object(self, idx, object):
-        old_object = self[idx]
+        old_object = deepcopy(self[idx])
         super(StudentMongoRepo, self).update_object(idx, object)
+        print(object, old_object)
         self._myStudentCollection.replace_one(self._serialize(old_object), self._serialize(object))
 
 
@@ -67,7 +69,7 @@ class AssignmentMongoRepo(Repository):
         self._myAssignmentCollection.delete_one({'id': id})
 
     def update_object(self, idx, object):
-        old_object = self[idx]
+        old_object = deepcopy(self[idx])
         super(AssignmentMongoRepo, self).update_object(idx, object)
         self._myAssignmentCollection.replace_one(self._serialize(old_object), self._serialize(object))
 
@@ -108,3 +110,8 @@ class GradeMongoRepo(GradeRepository):
     def extend(self, more):
         super(GradeMongoRepo, self).extend(more)
         self._myGradeCollection.insert_many([self._serialize(grade) for grade in self._grades])
+
+    def __setitem__(self, key, value):
+        old_grade = deepcopy(self._grades[key])
+        super(GradeMongoRepo, self).__setitem__(key, value)
+        self._myGradeCollection.replace_one(self._serialize(old_grade), self._serialize(value))

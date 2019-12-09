@@ -50,7 +50,7 @@ class StudentController:
         for student in self._studentRepo:
             if student.id == newStudent.id and student.id != studentID:
                 raise NotUnique("ID should be unique!")
-        self._studentRepo[idx] = newStudent
+        self._studentRepo.update_object(idx, newStudent)
 
     def get_students(self):
         return deepcopy(self._studentRepo.get_objects())
