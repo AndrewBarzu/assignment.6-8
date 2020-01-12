@@ -3,11 +3,12 @@ import new_files.validation_service
 import names
 import random
 import datetime
+from my_iterable
 
 class Repository:
     def __init__(self, student_list=None):
         if student_list is None:
-            student_list = []
+            student_list = MyIterable()
         self._objects = student_list
 
     @staticmethod
@@ -101,7 +102,7 @@ class Repository:
 
 class GradeRepository:
     def __init__(self):
-        self._grades = []
+        self._grades = MyIterable()
 
     def init_grades(self):
         for i in range(10):
