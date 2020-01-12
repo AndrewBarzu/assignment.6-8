@@ -2,8 +2,12 @@ class MyIterable:
     """
     An iterable class to replace the list
     """
-    def __init__(self, myList):
-        self._objects = myList
+
+    def __init__(self, myList=None):
+        if myList is None:
+            self._objects = []
+        else:
+            self._objects = myList
 
     def __setitem__(self, key, value):
         self._objects[key] = value
@@ -16,10 +20,13 @@ class MyIterable:
 
     def append(self, someObject):
         self._objects.append(someObject)
-    
+
+    def extend(self, more):
+        self._objects.extend(more)
+
     def remove(self, someObject):
         self._objects.remove(someObject)
-        
+
     def pop(self, index=None):
         if index:
             self._objects.pop(index)
@@ -37,9 +44,9 @@ class MyIterable:
             return self._objects[num]
         else:
             raise StopIteration
-    
+
     def __len__(self):
         return len(self._objects)
-    
+
     def __str__(self):
         return str(self._objects)

@@ -1,6 +1,5 @@
-import random
-from myIterable import MyIterable
 import math
+from new_files.domain import Grade
 
 class MergeSort:
     @staticmethod
@@ -34,21 +33,20 @@ class MergeSort:
         list2 = self.merge_sort(list2, order)
         return self._merge(list1, list2, order)
 
-class CombSort:
-    @staticmethod
-    def sort(objects, order):
-        is_sorted = False
-        gap = len(objects) - 1
-        shrink = 1.3
+def CombSort(objects, order):
+    is_sorted = False
+    gap = len(objects) - 1
+    shrink = 1.3
 
-        while not is_sorted:
-            gap = math.floor(gap / shrink)
-            if gap <= 1:
-                is_sorted = True
+    while not is_sorted:
+        gap = math.floor(gap / shrink)
+        if gap <= 1:
+            is_sorted = True
 
-            i = 0
-            while i + gap < len(objects) - 1:
-                if not order(objects[i], objects[i + 1]):
-                    objects[i], objects[i + 1] = objects[i + 1], objects[i]
-                    is_sorted = False
-                i += 1
+        i = 0
+        while i + gap < len(objects) - 1:
+            if not order(objects[i], objects[i + 1]):
+                objects[i], objects[i + 1] = objects[i + 1], objects[i]
+                is_sorted = False
+            i += 1
+    return objects

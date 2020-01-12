@@ -3,7 +3,7 @@ import new_files.validation_service
 import names
 import random
 import datetime
-from my_iterable
+from new_files.my_iterable import MyIterable
 
 class Repository:
     def __init__(self, student_list=None):

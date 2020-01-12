@@ -1,7 +1,6 @@
-from new_files.better_repo import GradeRepository
 from controllers.undo_controller import *
 from new_files.domain import Grade
-import new_files.exceptions as exceptions
+from new_files.my_sort import CombSort
 import operator
 
 class GradeController:
@@ -77,9 +76,14 @@ class GradeController:
         """
         self._gradeRepo.grade(studentID, assignmentID, grade)
 
+    # @staticmethod
+    # def sort_grades(grades: list):  # Pragma: no cover
+    #     return sorted(grades, key=operator.attrgetter('grade'), reverse=True)
+
     @staticmethod
-    def sort_grades(grades: list):  # Pragma: no cover
-        return sorted(grades, key=operator.attrgetter('grade'), reverse=True)
+    def sort_grades(grades):
+        mySortedGrardes = CombSort(grades[:], lambda x, y: x.grade > y.grade)
+        return mySortedGrardes
 
 
     def show_grades(self):
